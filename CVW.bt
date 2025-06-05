@@ -1,0 +1,44 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: CVW Live For Speed
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+struct Header
+{
+    char    FileType[7];   
+    byte    Na;            
+};
+
+
+Header head;
+byte some1;
+byte some2;
+byte some3;
+byte some4;
+byte some5;
+byte some6;
+byte some7;
+byte some8;
+float som1;
+float som2;
+float som3;
+float som4;
+float unk[10];
+float Xoffset;
+float Yoffset;
+float Zoffset;
+float som7;
+float som8;
+float unk2[5];

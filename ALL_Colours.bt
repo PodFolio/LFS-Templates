@@ -1,0 +1,34 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+struct Header // 32 bytes
+{
+    char    FileType[7];    //7
+    byte    version; 
+
+};
+
+struct Colours
+{
+    int col[12]<format=hex>;
+};
+
+struct LightCol
+{
+    int Light<format=hex>;
+};
+
+Header head;
+int colCount;
+Colours defaultColours[colCount];
+int lightCount;
+LightCol Lights[lightCount];

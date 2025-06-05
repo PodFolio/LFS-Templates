@@ -1,0 +1,136 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: Live For Speed CAR Info BIN
+//   Authors: Draggo
+//   Version: 2
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+string i2f (int &i) {
+    string str;
+    SPrintf(str, "%3.3f",((float)i / 65536.0f));
+    return str;
+}
+typedef struct
+{
+    float X;
+    float Y;
+    float Z;
+} Matrix;
+typedef struct
+{
+    int X<read=i2f>;
+    int Y<read=i2f>;
+    int Z<read=i2f>;
+} MatrixInt;
+typedef struct
+{
+    float X;
+    float Y;
+    float Z;
+    float Lift;
+    float Drag;
+} Aero;
+
+struct Areodynamics
+{
+    struct Wings
+    {
+        float MaxLift;
+        float MaxDrag;
+        float SideDrag;
+    };
+    Wings wing[4];
+};
+struct Tires
+{
+    byte TireType;
+    byte n[3];
+    float pressure;
+    float airTemperature;
+    float toeIn;
+    Matrix CenterOfContact[1];
+    float unspringMass;
+    float WidthOfTire;
+    float rimWidth;
+    float rimRadius;
+    float springConst;
+    float something;  
+    float dampingCompression; 
+    float dampingRebound;
+    float antiRoll;
+    float camber;
+    float incilination;
+    float caster;
+    float scrubRadius;
+    float momentOfInteria;
+    float currSuspDeflection;
+    float maxSuspDeflection;
+    int n1;
+    float tyreSpringConst;
+    float currVertTyreDeflection;
+    int n2[6];
+};
+
+struct FILE{
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
+        byte zero; //ignore
+        byte version <bgcolor=0x9F9FFE ,format=hex>; //ignore
+        char carname[4] <bgcolor=0x67D8D8>; //ignore
+    } header;
+byte Passengers;
+byte nothing[3];
+struct Matrix BodyMatrix[3];
+struct MatrixInt WorldPos[1];
+struct MatrixInt CoG[1];
+struct Matrix CoGLocal[1];
+struct Matrix FuelTank[1];
+int nothing1[7];
+struct Aero RearWing[1];
+struct Aero FrontWing[1];
+struct Aero Undertray[1];
+struct Matrix MomentofInteria[3];
+float MaxTorque;
+float atRPM;
+float MaxPower;
+float atRPM;
+float Fuel;
+int nothing2[3];
+float something0;
+float something1;
+float something2;
+float something3;
+float something4;
+float MassTotal;
+float WheelBase;
+float WeightDistribution;
+byte ForwardGears;
+byte Drive<comment = "1=rwd, 2=fwd, 3=awd">;
+byte ze[2];
+float TorqueSplit;
+float DrivetrainEff;
+int nothing3;
+float ReverseGear;
+float oneGear;
+float twoGear;
+float treeGear;
+float fourGear;
+float fiveGear;
+float sixGear;
+float sevenGear;
+float FinalDriveRatio;
+int nothing4[3];
+float parallerSterr;
+float brakeStrenght;
+float brakeBalance;
+int nothing5[5];
+Tires Tyre[4];
+
+
+
+} file;

@@ -1,0 +1,957 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: Live For Speed VOB
+//   Authors: turbosnail
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+//local int newFile = FileNew();
+#include "SET_veh.bt" 
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+
+//local int i; 
+string pots (float &i) {
+    string pot;
+    SPrintf(pot, "%0.14f",((float)i));
+    return pot;
+}
+
+string angle (ubyte &i) {
+    string ang;
+    SPrintf(ang, "%0.3f",((float)i *5));
+    return ang;
+}
+string fangle (float &i) {
+    string ang;
+    SPrintf(ang, "%0.3f",(((float)i *100)/1.7453f));
+    return ang;
+}
+string radius (ubyte &i) {
+    string ra;
+    SPrintf(ra, "%0.3f",(((float)i/100)/2));
+    return ra;
+}
+string fradius (float &i) {
+    string ra;
+    SPrintf(ra, "%0.3f",(((float)i+0.313)*100));
+    return ra;
+}
+string fradius2 (float &i) {
+    string ra;
+    SPrintf(ra, "%0.3f",(((float)i/100)/2));
+    return ra;
+}
+string minusto (ubyte &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",(((float)i-100) /100));
+    return hun;
+}
+string sto (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i /100));
+    return hun;
+}
+string sto2 (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i *1000));
+    return hun;
+}
+string stoR (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f =(RimDiamweter*100)/1.27",(((float)i *100)/1.27f));
+    return hun;
+}
+string stoR2 (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f =RimWidth/0.0245",((float)i /0.0254f));
+    return hun;
+}
+string tys (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i /1000));
+    return hun;
+}
+string red (float &i) {
+    string line;
+    SPrintf(line, "%0.2f",((float)i *9.5493f));
+    return line;
+}
+
+typedef struct
+{
+    float X;
+    float Y;
+    float Z;
+} Vector3;
+
+typedef struct
+{
+    word rX; // 32768 - 180 g
+    word rY;
+    word rZ;
+} Vec3R;
+
+string i2f (int &i) {
+    string str;
+    SPrintf(str, "%3.3f",((float)i / 65536.0f));
+    return str;
+}
+string rotate (uint &i) {
+    string str;
+    uint h = i & 2047;
+    if(h > 720)
+        h -= 2048;
+
+    uint p = (i >> 11) & 2047;
+    if(p > 360)
+        p -= 1024;
+
+    uint r = (i >> 21);
+    if(r > 720)
+        r -= 2048;
+
+    SPrintf(str, "h:%3.2f p:%3.2f r:%3.2f", (float)h, (float)p/4.0f, (float)r/4.0f);
+    return str;
+}
+
+struct Header // 32 bytes
+{
+    char    FileType[7];    //7
+    byte    version; 
+
+};
+
+struct Child // 44
+{
+    byte Flag<comment = "13 always">;
+    byte Type<comment = "00 - main mesh, 01 - calip, 02 - wheel, 03 - normal, 04 - trailing arm, 05 - mudguard, not hide in F mode, 06 - rear df point, 07 - front df point, 08 - undertry df point, 09 - centre df, 0A - mirror, 0B - handlebar",bgcolor=0x933EC5>;
+    byte FlipState<comment = "1 - static, 2 - full flip, 3 - swap side">;
+    byte LODsCount;
+    char Name[20];
+    byte SubObjState<comment = "MIRRORED = 1, CUSTOM_COLOR = 2, ALWAYS = 224 (E3 - Mirror only, E2 - Mirror fix possible)">;
+    byte unk2;
+    byte GroupsCount;
+    byte sp;
+};
+
+struct RimChild // 44
+    {
+    char Z[4];
+    byte Flag<comment = "13 always">;
+    byte Type<comment = "00 - main mesh, 01 - calip, 02 - wheel, 03 - normal, 04 - trailing arm, 05 - mudguard, not hide in F mode, 06 - rear df point, 07 - front df point, 08 - undertry df point, 09 - centre df, 0A - mirror, 0B - handlebar",bgcolor=0x933EC5>;
+    byte FlipState<comment = "1 - static, 2 - full flip, 3 - swap side">;
+    byte LODsCount;
+    char Name[20];
+    byte SubObjState<comment = "MIRRORED = 1, CUSTOM_COLOR = 2, ALWAYS = 224 (E3 - Mirror only, E2 - Mirror fix possible)">;
+    byte unk2;
+    byte GroupsCount;
+    byte sp;
+};
+
+enum SUB_OBJ_STATE {
+    MIRRORED = 1,
+    CUSTOM_COLOR = 2,
+    ALWAYS = 224
+};
+
+struct LODInfo {
+    ushort  unk3;
+    ushort  LODdistance;
+};
+
+
+struct GeometryInfo{
+    word    NumVertex;      //2
+    word    NumFaces;       //2
+    uint    SubObjectsCount;    //number of child meshes
+    Vec3R   rotate;
+    word    Zero;
+    Vector3 pos;            // position
+};
+
+
+struct ObjectName // 16 byte
+{
+    byte R; // Red
+    byte G; // Green
+    byte B; // Blue
+    byte X; // N/A
+    char Name[10];
+};
+
+struct Vertex // size = 16 byte
+{
+    int Flag<comment = "0=OFF, 1=MIRROR, 2=FIX_CENTER, 16=REFERENCED, 64=DARK, 128=VERY_DARK, 192=EXT_DARK">;
+    int X<read=i2f>; // 65536 = 1m
+    int Y<read=i2f>; // 65536 = 1m
+    int Z<read=i2f>; // 65536 = 1m
+
+};
+
+struct Faces // 12 bytes
+{
+    byte MirrorState<comment = " MIRROR_OFF = 0, MIRROR_ON = 1, OLOLO_2 = 2, GLASS = 4, OLOLO_8 = 8, MIRROR_FIX = 16,DOUBLE_SIDE = 32">;
+    byte LayoutID; // Car Layout ID
+    byte MapID;
+    byte NCLevel;
+    byte LodID<comment = "Colision">;
+    byte GroupID; // 
+    u_word Ind1;
+    u_word Ind2;
+    u_word Ind3;
+};
+
+enum MIRROR_STATE
+{
+    MIRROR_OFF = 0,
+    MIRROR_ON = 1,
+    OLOLO_2 = 2,
+    GLASS = 4,
+    OLOLO_8 = 8,
+    MIRROR_FIX = 16,
+    DOUBLE_SIDE = 32
+};
+
+struct Texture // 20 byte
+{
+    int  Flag<comment = "1 - locate in /skins_dds/CAR_DEFAULT.dds, 2 - dash">;
+    char Name[20]<comment = "filename in /data/dds texture name">;
+};
+
+//struct TextureDescriptions // 24 byte
+//{
+//    char    Name[16]; //16
+ //   byte    skyReflection<comment = "bit 0 : sky reflection">;
+ //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
+ //   byte    TextureId<comment = "world texture index">;
+ //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
+ //   byte    UTile;          // 64 = 1.0
+ //   byte    VTile;          // 64 = 1.0
+  //  byte    Uoffset;           // 64 = 1.0
+ //   byte    Voffset;           // 64 = 1.0
+
+//};
+
+struct CutOut
+{
+    char name[16];
+    byte rotate<comment = " bitwise 1 - rotate 90, 2- rotate 180, 3 - rotate 270,  4 - flip">;
+    byte Flag;
+    ushort PageId;
+    byte AlphaType<comment = "0 - solid, 1 - Alpha test, 3 - Alpha, 4 - Tree edge alpha">;
+    byte EnvMapType<comment = "0 - matt, 1 - constant shine, 2 - var shine, 3 - overlay or plain">;
+    byte ShineType<comment = "0 - none, 1 - paint, 2 - glass, 3 - metall, 4 - water, 5 - asphalt, 6 - rubber, 7 - plastic">;
+    byte Sp<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark (not used)">;
+    struct {
+        byte R;
+        byte G;
+        byte B;
+    } ReflectionColor;
+    byte Roughness<comment = "100 = 1.0">;
+    byte sizeX<comment = "128 = 100%">;
+    byte sizeY<comment = "128 = 100%">;
+    byte posX<comment = "128 = 100%">;
+    byte posY<comment = "128 = 100%">;
+};
+
+
+
+struct RimPoints{
+    float rimPointX<bgcolor=0xBDC703>;
+    float rimPointY<bgcolor=0xBDC703>;
+
+};
+
+struct Surface
+{
+    u_word Point1;
+    u_word Point2;
+    u_word SmoothGroup; // max 16
+    u_word GroupId;
+};
+
+struct RimColours{
+char ColourName[16];
+byte R; // Red
+byte G; // Green
+byte B; // Blue
+byte Flag; // Some Flag L/S
+};
+ 
+struct Map
+{
+    char name[16];
+    struct {
+        byte R;
+        byte G;
+        byte B;
+    } Color;
+    byte Sp;
+    int  Flag; // bitwise 0-no, 1-central 16 - link to top
+    // step 0.25 
+    // heading = step
+    // pitch = step >> 11
+    // roll = step >> 21
+    uint  rotate<read=rotate>; // heading + pitch + roll
+
+    struct {
+        int R<read=i2f>;
+        int F<read=i2f>;
+        int U<read=i2f>;
+    } locate;
+    
+    int Width<read=i2f>;
+    int Height<read=i2f>;
+    ushort CutOutId;
+    ushort CutOutIdOpposite;
+
+struct TSTB {
+    byte turbo:1;
+    byte cross:1;
+    byte none:1;
+    byte isLoadedFromFile:1;
+    byte stroke:1;
+};
+
+enum <byte> EngineLayout  {
+    Inline = 0,
+    Flat = 1,
+    V = 2
+};
+    
+};
+struct Engine
+{
+    float TotalMass;
+    float Power;
+    float Torque;
+    short PowerRPM;
+    short TorqueRPM;
+    float FuelTankSize;
+    TSTB tstb <bgcolor=0xBDC703>;
+    byte empty[3];
+    int some6;    
+    float EngineSize <comment = "Engine size" ,bgcolor=0xBDC703>;
+    byte Cylinders<comment = "Cylinders 1 - 12" ,bgcolor=0xBDC703>;
+    EngineLayout Layout<comment = "Layout 0:Inline 1:Flat 2:V" ,bgcolor=0xBDC703>;
+    byte non[2];
+    float turbomaxboost <comment = "Turbo Max Boost" ,bgcolor=0xBDC703>;
+    float turbomultipler <comment = "Turbo MOI Multipler" ,bgcolor=0xBDC703>;
+    float maxtorquemul <comment = "Max Torque Mul" ,bgcolor=0xBDC703>;
+    float torquesmul <comment = "Torque Spread Mul" ,bgcolor=0xBDC703>;
+    float flo0 <comment = "Something float" ,bgcolor=0xBDC703>;
+    float redline <comment = "Redline?" ,bgcolor=0xBDC703>;
+    float camtime <comment = "Cam Timing" ,bgcolor=0xBDC703>;
+    float ResistanceMul <comment = pots ,bgcolor=0xBDC703>;
+    float InteriaMul <comment = pots ,bgcolor=0xBDC703>;
+    float idle<comment = "Idle Speed?" ,bgcolor=0xBDC703>;
+};
+struct eEngine
+{
+    float someES1;
+    float Power;
+    float Torque;
+    short PowerRPM;
+    short TorqueRPM;
+    float someES2;
+    TSTB tstb <bgcolor=0xBDC703>;
+    byte empty[3];
+    int some6;    
+    float eRedline<comment = red ,bgcolor=0xBDC703>;
+    float eMaxPower<comment = tys ,bgcolor=0xBDC703>;
+    float eMaxTorque<comment = "Max Torque" ,bgcolor=0xBDC703>;
+};
+struct OldEngine
+{
+    TSTB tstb <bgcolor=0xBDC703>;
+    byte empty[3];
+    int some6;    
+    float EngineSize <comment = "Engine size" ,bgcolor=0xBDC703>;
+    byte Cylinders<comment = "Cylinders 1 - 12" ,bgcolor=0xBDC703>;
+    EngineLayout Layout<comment = "Layout 0:Inline 1:Flat 2:V" ,bgcolor=0xBDC703>;
+    byte non[2];
+    float turbomaxboost <comment = "Turbo Max Boost" ,bgcolor=0xBDC703>;
+    float turbomultipler <comment = "Turbo MOI Multipler" ,bgcolor=0xBDC703>;
+    float sm5;
+    float sm6;
+    float sm7;
+    float redline <comment = "Redline?" ,bgcolor=0xBDC703>;
+    float sm9;
+
+};
+struct ObjEngine
+{
+    float TotalMass;
+    float Power;
+    float Torque;
+    short PowerRPM;
+    short TorqueRPM;
+    float FuelTankSize;
+    TSTB tstb <bgcolor=0xBDC703>;
+    byte empty[3];
+    int some6;    
+    float EngineSize <comment = "Engine size" ,bgcolor=0xBDC703>;
+    byte Cylinders<comment = "Cylinders 1 - 12" ,bgcolor=0xBDC703>;
+    EngineLayout Layout<comment = "Layout 0:Inline 1:Flat 2:V" ,bgcolor=0xBDC703>;
+    byte non[2];
+    float turbomaxboost <comment = "Turbo Max Boost" ,bgcolor=0xBDC703>;
+};
+
+struct Setups
+{
+    char name[16];
+    SETUP set;
+};
+
+struct Colours
+{
+    int col[12]<format=hex>;
+};
+struct LightCol
+{
+    int brake<format=hex>;
+    int head<format=hex>;
+    int tail<format=hex>;
+    int left_ind<format=hex>;
+    int right_ind<format=hex>;
+    int rear_fog<format=hex>;
+    int front_fog<format=hex>;
+    int reverse<format=hex>;
+int extra<format=hex>;
+int extra2<format=hex>;
+int extra3<format=hex>;
+};
+struct Configs
+{
+    char name[12];
+    int gtrch;
+};
+
+//--------------DASH
+struct RPMdiode {
+    ubyte CentreX <comment=minusto>;
+    ubyte CentreY <comment=minusto>;
+    ubyte Number;
+    ubyte Spacing <comment=sto>;
+    ubyte Size <comment=sto>;
+    ubyte empty;
+    ubyte empty1;
+};
+
+struct RPMled {
+    ubyte CentreX <comment=minusto>;
+    ubyte CentreY <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte XRadius <comment=sto>;
+    ubyte YRadius <comment=sto>;
+    ubyte InnerStart <comment=sto>;
+    ubyte InnerEnd<comment=sto>;
+    ubyte TextOut <comment=sto>;
+    ubyte TextSize <comment=sto>; 
+    ubyte empty;
+    ubyte empty1;  
+};
+struct SpeedoAnalog {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte Radius <comment=radius>; 
+    ubyte empty[3];  
+};
+struct Indicator {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte Size <comment=sto>;
+    ubyte Type<comment="0: diode, 1: pictogram, 2: only with Shared/Left/Right Indicator">;
+};
+struct Dash {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte Width <comment=sto>;
+    ubyte Height <comment=sto>;
+};
+struct Dash2 {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte Radius <comment=radius>;
+    ubyte em_p[3];
+};
+struct DColor {
+    ubyte R;
+    ubyte G;
+    ubyte B;
+    ubyte X;
+};
+
+
+struct Dashboard {
+
+        byte DashType<comment="1: s_clock, 2:s_clock_white 3: s_clock_formula">;
+        byte size;
+        byte e[2];
+        if (size > 0)
+        {
+            byte LCD <bgcolor=0x9FAFFF,comment="0: Gear:led RPM:led, 1: Gear:led RPM:led, 2: Gear:led RPM:led, 3 gear diode, 4: Gear:led RPM:diode, 5: Gear:diode RPM:diode 7: rpm led, 47:s_clock gear:on, rpm:on 82: s_clock Gear OFF">;
+            byte SpeedoDigital<comment="0: Analog, 1:Oil temp ON, 2: Oil pressure ON, 3: Oil temp/pressuer ON, 4: Digital">;
+            byte un[2];
+            if (DashType == 3)
+            {
+                if (LCD == 0 || LCD == 1 || LCD == 2)
+                {
+                    RPMled Tacho;
+               
+                }
+                else
+                {
+                    RPMdiode Tacho;
+               
+                }
+            }
+            else if (DashType == 1)
+            {
+                if (LCD == 58)
+                {
+                    byte MFDisp<comment="0: Off, 1: vws, 2: 123 3: digi 123">;
+                    byte emp2;
+                    byte emp3;
+                    byte emp4;
+                    int emp;
+                    Indicator unknn;
+                    //SpeedoAnalog Tacho;
+                }
+                
+                
+            }
+
+            else
+            {
+                    byte MFDisp<comment="0: Off, 1: vws, 2: 123 3: digi 123">;
+                    byte empt2;
+                    byte empt3;
+                    byte empt4;
+               
+            }
+        DColor MFDcol1;
+        DColor MFDcol2;    
+        Indicator ShiftLight;
+        Indicator FullBeam;
+        Indicator Handbrake;
+        Indicator PitLimiter;
+        Indicator TractionControl;
+        Indicator LeftIndicator;
+        Indicator RightIndicator;
+        Indicator SharedIndicator;
+        Indicator OilPresure;
+        Indicator Battery;
+        Indicator ABS;
+        Indicator un3;
+        Dash Sometin;
+        Dash Gear;
+        if (size !=80)
+        {
+        Dash MultiFunctionDisp;
+        Dash BR_SpeedoDig;
+        }
+        if (DashType == 1 || DashType == 2)
+        {
+            if ((LCD == 0 && SpeedoDigital == 0))
+            {
+                Dash som;
+                Dash2 Speedo;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                Dash2 OilPressure;
+                
+            }
+            else if (LCD == 0 && SpeedoDigital == 4)
+            {
+                Dash SpeedoDig;
+                Dash2 Somee;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                Dash2 OilPressure;
+                //Indicator un4;
+            }
+            else
+            {
+                Dash2 Speedo;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                //Dash2 OilPressure;
+                //Indicator un4;
+                if (size ==144)
+                {
+                    
+                    Dash2 OilPressure;
+                    Indicator unknn2;
+                }
+                else if (size ==160)
+                {
+                    
+                    Dash2 OilPressure;
+                    Indicator unknn2;
+                    Dash2 unknn3;
+                    Dash2 unknn4;
+                }
+            }
+        }
+        
+    }   
+};
+//----------END DASH
+
+struct Frame
+{
+    struct UN
+    {
+        hfloat ann[6];
+        float ann1;
+        float ann1;
+    };
+    struct UN2
+    {
+        byte un1;
+        byte un2;
+        byte un3;
+        byte un4;
+        float TUBEmass;
+        int un6;
+       
+    };
+    int pointCount;
+    UN unn[pointCount];
+    int tCount;
+    UN2 unn2[tCount];
+};
+
+struct Wh
+{
+    float LowerPivot;
+    float Forward;
+    float som13;
+};
+
+struct Wheels
+{
+    float Width<comment = sto2>;
+    float Ratio<comment = sto>;
+    float RimDiameter<comment=stoR>;
+    float RimWidth<comment=stoR2>;
+    byte SuspensionType<comment = "0:Rigid, 1:Linear, 2:Front Fork, 3:McPherson Strut, 4:DoubleWishbone, 5:TrailingArm">;
+    byte RimExtraWidth;
+    byte RimLip;
+    byte BlackInnerRim;
+    float MaxUp;
+    float Caster;
+    byte RimInnerDepth;
+    byte so82;
+    byte DiscRadius;
+    byte DiscOffset;
+    float Indication;
+    float so83;
+    float Offset;
+    float Track;
+    float so13;
+    float so14;
+    float so15;
+    float HalfUpright;
+
+};
+
+struct Areodynamics
+{
+    struct Wings
+    {
+        float MaxLift;
+        float MaxDrag;
+        float SideDrag;
+    };
+    Wings wing[4];
+};
+
+
+struct CarData
+{
+    byte CCW<comment = "64:??, 66:Bike, 82: ConcealedWheels=NO ,114: ConcealedWheels=YES,">;
+    byte some2_;
+    byte some3_;
+    byte required;
+    byte some2;
+    byte some3;
+    byte some4;
+    byte some5;
+    byte Type<comment = "0-object, 1-touring car, 2-saloon, 3-buggy, 4-formula, 5-GT, 6-kart, 7-bike, 8-van, 9-truck, 10-F1, 11-FSAE">;
+    byte un1; 
+    byte un2;
+    byte un3;
+    byte som3_1;
+    byte som3_2;
+    byte som3_3;
+    byte som3_4;
+    byte Transmission<comment = "0-No Drive, 1-RWD, 2-FWD, 3-AWD,">;
+    byte Electric<comment = "its not it. 0, 1-Electric, 2,3,4,5, 6-Bike?">;
+    byte non[2];
+    char SkinID[4];
+    if (som3_1 == 6)
+    {
+        eEngine eng;
+    }
+    else if (un2 == 4)
+    {
+    OldEngine eng;
+    }
+    else if (Type== 0)
+    {
+    ObjEngine eng;
+    }
+    else
+    {
+    Engine eng;
+    }
+    //if (Type == 0)
+    //{
+    //Setups defaultSetups[1];
+    //}
+    //else
+    //{
+    int setCount;
+    Setups defaultSetups[setCount];
+    //}
+    int colCount;
+    Colours defaultColours[colCount];
+    int defGtrch;
+    int countConfigs;
+    Configs Configuration[countConfigs];
+    float EngineR;
+    float EngineF;
+    float EngineU;
+    float DriverR;
+    float DriverF;
+    float DriverU;
+    float BackSeatR;
+    float BackSeatF;
+    float BackSeatU;
+    float FuelTankR;
+    float FuelTankF;
+    float FuelTankU;
+    float Battery12Vr;
+    float Battery12Vf;
+    float Battery12Vu;
+    float Battery12Vmass;
+    float SpareWheelR;
+    float SpareWheelF;
+    float SpareWhellU;
+    float SpareWhellPinch<comment = fangle>;
+    float sssome1<comment = fangle>;
+    float sssome2<comment = fangle>;
+    float SteeringWheelPitch<comment = fangle>;
+    float SteeringWheelTurn<comment = fangle>;
+    float SteeringWheelHeading<comment = fangle>;
+    float sssome3<comment = fangle>;
+    float TrialReductionH;
+    float sssome4<comment = fangle>;
+    float sssome5<comment = fangle>;
+    float sssome6<comment = fangle>;
+    float sssome7<comment = fangle>;
+    /*
+    if ((some2_ == 192 && some3_ == 4) || (some2_ == 192 && some3_ == 13) || (some2_ == 0 && required != 135) )
+    {
+
+        float idk_2_[2];        
+    }
+    else if ((some2_ == 192 && some3_ > 13) || (some2_ == 0 && required == 247 && un2 == 4))
+    {
+
+        
+    }
+    else if (un2 == 6 && some2_ != 5 && some3_ != 8)
+    {
+
+        float idk2[1];
+    }
+    else if (un2 == 4  || Electric == 6)
+    {
+
+        float idk__2[5];
+    }
+    else if (som3_1 == 6 || some2_ == 5 || some3_ == 8)
+    {
+        
+        float idk___2[4];
+    }
+    else
+    {
+
+        float idk____2[1];
+    }
+    */
+    byte dasztype;
+    byte daszsize;
+    byte daszunk[2];
+    byte daszboard[data.daszsize];
+    //Dashboard dash;
+    int som5;
+    //if (Electric == 0 && som3_1 == 6)
+    //{
+    //}
+    //else
+    //{
+    
+    int som6;
+    int NrForwardGears;
+    float ReverseGearRatio;
+    //}
+    char cartype[8];
+    char EngineSoundFile[16];
+    float som_8[4];
+    LightCol Lights;
+    char FramName[4];
+    Frame frm;
+    if (some2_ == 0 && required == 247  && un2 == 4)
+    {
+        int whlCount;
+        Wh wh[whlCount];
+        Wheels Rear;
+        Wheels Front;
+        
+    }
+    else
+    {
+        float SuspMassConst;
+        int whlCount;
+        Wh wh[whlCount];
+        Wheels Rear;
+        Wheels Front;
+    }
+};
+
+
+
+Header head;
+CarData data;
+struct {
+    Child Chld  <bgcolor=cRed>;
+
+    struct  LODInfo lodinf[Chld.LODsCount];
+
+    struct GeometryInfo Geometry;
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+    
+
+    int    countPage;
+    struct Texture Textures[countPage];
+
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+    
+    ushort MaterialCount <bgcolor=cYellow>;
+    ushort u2;
+    struct Map Materials[MaterialCount];    
+
+
+    if(Chld.Type == 0) {
+            struct {
+            char name[8];
+            } layouts[16];
+        
+            byte ZERO[128];
+        }
+} Main;
+struct {
+     Child Chld  <bgcolor=cRed>;
+
+    struct  LODInfo lodinf[Chld.LODsCount];
+
+    struct GeometryInfo Geometry;
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+    
+    int    countPage;
+    struct Texture Textures[countPage];
+
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+    
+    ushort MaterialCount <bgcolor=cYellow>;
+    ushort u2;
+    struct Map Materials[MaterialCount];    
+
+
+    if(Chld.Type == 0) {
+            struct {
+            char name[8];
+            } layouts[16];
+        
+            byte ZERO[128];
+        }
+
+
+} SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;
+struct {
+    byte   SpokeCount<bgcolor=cRed>;    
+    byte    Na[3];
+    RimChild Chld  <bgcolor=cRed>;
+
+    struct  LODInfo slodinf[Chld.LODsCount];
+
+    struct GeometryInfo Geometry;
+
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+    int    countPage;
+    struct Texture Textures[countPage];
+    
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+
+    
+    short MaterialCount <bgcolor=cYellow>;
+    short u2;
+    struct Map Materials[MaterialCount];
+
+
+
+} Spoke[1] <optimize=false>;
+struct {
+    byte Points<bgcolor=cRed>;
+    byte na[3];
+    struct RimPoints RimPt[Points];
+    short na2;
+    short ColourCount<bgcolor=cRed>;
+    struct RimColours Color[ColourCount]<bgcolor=cYellow>;
+    byte SurfaceCount<bgcolor=cRed>;
+    byte na1;
+    short na3;
+    struct Surface srf[SurfaceCount];
+
+} Rim[1] <optimize=false>;
+Areodynamics aero;

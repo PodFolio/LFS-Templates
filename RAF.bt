@@ -1,0 +1,121 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: ChatGPT
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// 010 Editor Template for RAF (Replay Analyser File) Version 2
+
+// Helper structs for static and dynamic wheel info
+
+struct StaticWheelInfo {
+    float X;                   // relative to reference point
+    float Y;                   // relative to reference point
+    float Z;                   // relative to reference point
+    float radius;              // unloaded
+    float width;               // at widest point
+    float maxDeflect;          // suspension travel
+    byte reserved1[4];         // reserved bytes
+    byte reserved2;
+    byte tyreType;             // see NOTES
+    byte reserved3[2];
+    float springConstant;      // N/m
+    float dampingCompression;  // Ns/m
+    float dampingRebound;      // Ns/m
+    float maxBrakeTorque;      // Nm
+    byte reserved4[80];        // reserved bytes
+};
+
+struct DynamicWheelInfo {
+    float suspensionDeflect;  // compression from unloaded
+    float steer;              // including Ackermann and toe
+    float XForce;             // force right
+    float YForce;             // force forward
+    float verticalLoad;       // perpendicular to surface
+    float angularVelocity;    // radians/s
+    float leanRelativeToRoad; // radians (viewed from rear)
+    byte airTemperature;      // degrees C
+    byte slipFraction;        // (0 to 255)
+    byte reserved[2];         // reserved bytes
+};
+
+// Main header block (1024 bytes)
+struct RAFHeader {
+    char signature[6];         // "LFSRAF"
+    byte gameVersion;          // ignore
+    byte gameRevision;         // ignore
+    byte RAFVersion;           // must be 2
+    byte updateInterval;       // ms (normally 10 / hlvc 100)
+    byte reserved1[2];
+    ushort headerSize;         // data blocks start (A)
+    ushort blockSize;          // size of a data block (B)
+    ushort wheelBlockSize;     // size of a dynamic wheel block (C)
+    ushort wheelBlockOffset;   // offset of wheel block within data block (D)
+    int numberOfBlocks;        // total number of data blocks
+    char shortTrackName[4];    // e.g. "BL2R"
+    float trackRulerLength;    // total index distance
+    char player[32];           // player name text
+    char car[32];              // car name text
+    char track[32];            // track name text
+    char config[16];           // configuration text
+    char weather[16];          // weather text
+    char LFSVersion[8];        // LFS version text
+    byte playerFlags;          // driver aids etc.
+    byte numberOfWheels;       // usually 4
+    byte HLVCLegal;            // 0=UNKNOWN 1=LEGAL 2=ILLEGAL
+    byte numberOfSplits;       // including lap time
+    int split1;                // ms
+    int split2;                // ms
+    int split3;                // ms
+    int split4;                // ms
+    float mass;                // kg including driver
+    float sprungMass;          // kg including driver
+    float rearAntiroll;        // N/m
+    float frontAntiroll;       // N/m
+    float finalDriveRatio;     // final drive ratio
+    byte numberOfGears;        // forward gears
+    byte reserved2[3];
+    float gearRatios[7];       // forward gear ratios
+    byte reserved3[272];
+    StaticWheelInfo staticWheelInfo[4];  // 4 wheels' static info
+};
+
+// Data block (192 bytes per block)
+struct DataBlock {
+    float throttle;          // 0 to 1
+    float brake;             // 0 to 1
+    float inputSteer;        // radians
+    float clutch;            // 0 to 1
+    float handbrake;         // 0 to 1
+    byte gear;               // 0=R, 1=N, 2=1st gear, etc.
+    char lateralG;           // * 20 (-120 to 120 = -6 to 6 G)
+    char forwardG;           // * 20 (-120 to 120 = -6 to 6 G)
+    char upwardsG;           // * 20 (-120 to 120 = -6 to 6 G)
+    float speed;             // m/s
+    float carDistance;       // distance traveled by car (m)
+    int positionX;           // map X (1m = 65536)
+    int positionY;           // map Y (1m = 65536)
+    int positionZ;           // altitude (1m = 65536)
+    float engineSpeed;       // radians/s
+    float indexDistance;     // m (track ruler measurement)
+    short rightVectorX;      // X of right-vector
+    short rightVectorY;      // Y of right-vector
+    short rightVectorZ;      // Z of right-vector
+    short forwardVectorX;    // X of forward-vector
+    short forwardVectorY;    // Y of forward-vector
+    short forwardVectorZ;    // Z of forward-vector
+    DynamicWheelInfo dynamicWheelInfo[4];  // 4 wheels' dynamic info
+};
+
+// Main template for parsing the RAF file
+RAFHeader header;
+
+DataBlock dataBlocks[header.numberOfBlocks];
+

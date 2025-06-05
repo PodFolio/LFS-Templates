@@ -1,0 +1,32 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: KNW Live For Speed
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+struct FILE{
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>;
+        byte version;
+        byte revision;
+    } header;
+    int unk1;
+    //int num <bgcolor=0x6767D8>;
+    struct SOME {
+        float unk0;
+        float x <bgcolor=0xBDC703>;
+        float y <bgcolor=0x79FF79>;
+        float z <bgcolor=0xA0A0FF>;
+float unk1;
+float unk2;
+float unk3;
+float unk4;
+float unk5;
+    } some[ 120 ];
+} file;

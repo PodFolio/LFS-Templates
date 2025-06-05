@@ -1,0 +1,62 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: WXS Live For Speed Rim
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+struct Header
+{
+    char    FileType[7];   
+    byte    Na;            
+};
+
+struct RimPoints{
+    float rimPointX<bgcolor=0xBDC703>;
+    float rimPointY<bgcolor=0xBDC703>;
+
+};
+
+struct Colours{
+char ColourName[16];
+byte R; // Red
+byte G; // Green
+byte B; // Blue
+byte Flag; // Some Flag L/S
+};
+
+struct Surface
+{
+    u_word Point1;
+    u_word Point2;
+    u_word SmoothGroup; // max 16
+    u_word GroupId;
+};
+
+Header head;
+byte Points<bgcolor=cRed>;
+byte na[3];
+struct RimPoints RimPt[Points];
+short na2;
+short ColourCount<bgcolor=cRed>;
+struct Colours Color[ColourCount]<bgcolor=cYellow>;
+byte SurfaceCount<bgcolor=cRed>;
+byte na1;
+short na3;
+struct Surface srf[SurfaceCount];
+
+
+
+
+
+

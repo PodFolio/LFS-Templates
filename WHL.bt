@@ -1,0 +1,258 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+typedef struct
+{
+    int X;
+    int Y;
+    int Z;
+} Vector3;
+
+typedef struct
+{
+    word rX; // 32768 - 180 g
+    word rY;
+    word rZ;
+} Vec3R;
+
+
+struct Header // 32 bytes
+{
+    char header[7];
+    byte version;
+};
+
+struct Child // 44
+{
+    char Z[24];
+    ushort Key<format=hex,comment = "E3 - Mirror only, E2 - Mirror fix possible">;
+    ubyte Key1<comment = "00 - main mesh, 01 - calip, 02 - wheel, 03 - normal, 0A - mirror",bgcolor=0x933EC5>;
+    ubyte Key2<comment = "01/03 - Mirror fix works, 02 - Mirror fix not work">;
+    ubyte Some1Count;
+    ubyte unk;
+    ushort NaCount;
+};
+struct Child2 // 44
+{
+    int unknown<comment = "Do not change">;
+};
+struct Some1{
+    u_word Zero;
+    u_word SomeRotate;
+};
+
+
+//struct GeometryInfo{
+ //   word    NumVertex;      //2
+ //   word    NumFaces;       //2
+ //   uint    CountNotice;
+ //   Vec3R   rotate;
+ //   word    Zero;
+ //   Vector3 pos;            // position
+  //  word    One;            //2
+ //   word    NumObjects;    //2
+//};
+
+struct GeometryInfo{
+    word    NumVertex;      //2
+    word    NumFaces;       //2
+    uint    CountNotice;
+    Vec3R   rotate;
+    word    Zero;
+    Vector3 pos;            // position
+};
+
+
+
+struct ObjectName // 16 byte
+{
+
+    char Name[16];
+    byte R; // Red
+    byte G; // Green
+    byte B; // Blue
+    byte X; // N/A
+    //word MaterialID;
+};
+
+struct Vertex // size = 16 byte
+{
+    int id_material;
+    int X; // float = 4 byte
+    int Y;
+    int Z;
+};
+
+struct Faces // 12 bytes
+{
+    byte MirrorState; // SEE BELOW MIRROR_STATE
+    byte LayoutID; // Car Layout ID
+    byte MapID;
+    byte NCLevel;
+    byte LodID;
+    byte Smooth; // 
+    u_word Ind1;
+    u_word Ind2;
+    u_word Ind3;
+};
+
+enum MIRROR_STATE
+{
+    MIRROR_OFF = 0,
+    MIRROR_ON = 1,
+    OLOLO_2 = 2,
+    GLASS = 4,
+    OLOLO_8 = 8,
+    MIRROR_FIX = 16,
+    DOUBLE_SIDE = 32
+};
+
+struct Texture // 20 byte
+{
+    int  Flag<comment = "1 - locate in /skins_dds/CAR_DEFAULT.dds">; // 1 - locate in /skins_dds/CAR_DEFAULT.dds
+    char Name[20]<comment = "filename in /data/dds texture name">;
+};
+
+//struct TextureDescriptions // 24 byte
+//{
+//    char    Name[16]; //16
+ //   byte    skyReflection;   // bit 0 : sky reflection
+ //   byte    Rotate;          // bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip
+ //   byte    TextureId;       // world texture index
+ //   byte    Sp1;             // 64 = 1.0
+ //   byte    UTile;          // 64 = 1.0
+ //   byte    VTile;          // 64 = 1.0
+ //   byte    Uoffset;           // 64 = 1.0
+ //   byte    Voffset;           // 64 = 1.0
+
+//};
+struct CutOut
+{
+    char name[16];
+    byte rotate<comment = " bitwise 1 - rotate 90, 2- rotate 180, 3 - rotate 270,  4 - flip">;
+    byte Flag;
+    ushort PageId;
+    byte AlphaType<comment = "0 - solid, 1 - Alpha test, 3 - Alpha, 4 - Tree edge alpha">;
+    byte EnvMapType<comment = "0 - matt, 1 - constant shine, 2 - var shine, 3 - overlay or plain">;
+    byte ShineType<comment = "0 - none, 1 - paint, 2 - glass, 3 - metall, 4 - water, 5 - asphalt, 6 - rubber, 7 - plastic">;
+    byte Sp<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark (not used)">;
+    struct {
+        byte R;
+        byte G;
+        byte B;
+    } ReflectionColor;
+    byte Roughness<comment = "100 = 1.0">;
+    byte sizeX<comment = "128 = 100%">;
+    byte sizeY<comment = "128 = 100%">;
+    byte posX<comment = "128 = 100%">;
+    byte posY<comment = "128 = 100%">;
+};
+
+struct Material // 44 byte
+{
+    char Name[16]; //16
+    byte R;      //4
+    byte G;      //4
+    byte B;      //4
+    byte A;      //4
+
+    int u1;     // 65535 = 1.0 Metre
+
+    int u2;     // 65535 = 1.0 Metre
+
+    int u3;     // 65535 = 1.0 Metre
+
+    int u4;     // 65535 = 1.0 Metre
+
+    int u6;     //    RightSide Texture Descriptions ID
+    int RLBoundUV;     // 65535 = 1.0 Metre
+    int DUBoundUV;    // 65535 = 1.0 Metre
+    short RTDI;     //    RightSide Texture Descriptions ID
+    short LTDI;     //    LeftSide  Texture Descriptions ID
+};
+struct RimPoints{
+    float rimPointX<bgcolor=0xBDC703>;
+    float rimPointY<bgcolor=0xBDC703>;
+
+};
+
+struct Colours{
+char ColourName[16];
+byte R; // Red
+byte G; // Green
+byte B; // Blue
+byte A; // Alpha
+};
+
+struct Surface
+{
+    u_word Point1;
+    u_word Point2;
+    u_word SmoothGroup; // max 16
+    u_word GroupId;
+};
+
+
+
+
+Header head;
+struct {
+    float unk;
+    float unk2;
+    byte   SpokeCount<bgcolor=cRed>;    
+    byte    Na[3];
+    Child Chld  <bgcolor=cRed>;
+    //struct Some1 Somes[Chld.Some1Count];
+    struct GeometryInfo Geometry;
+    //struct ObjectName ObjectNames[Geometry.NumObjects];
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+    int    countPage;
+    struct Texture Textures[countPage];
+    
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+    //short MaterialColoursCount <bgcolor=cYellow>;
+    //short u;
+    //struct MaterialColours Materials0[MaterialColoursCount];
+    
+    short MaterialCount <bgcolor=cYellow>;
+    short u2;
+    struct Material Materials[MaterialCount];
+
+// need test
+    if (Geometry.CountNotice > 0) {
+        struct {
+            char Text[8];
+        } FaceGroup[32];
+    }
+
+} Spoke[1] <optimize=false>;
+struct {
+    byte Points<bgcolor=cRed>;
+    byte na[3];
+    struct RimPoints RimPt[Points];
+    short na2;
+    short ColourCount<bgcolor=cRed>;
+    struct Colours Color[ColourCount]<bgcolor=cYellow>;
+    byte SurfaceCount<bgcolor=cRed>;
+    byte na1;
+    short na3;
+    struct Surface srf[SurfaceCount];
+
+} Rim[1] <optimize=false>;

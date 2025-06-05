@@ -1,0 +1,30 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: LYT Live For Speed Layout
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+struct FILE{
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>;
+        byte version;
+        byte revision;
+    } header;
+    ushort numObjects <bgcolor=0x6767D8>;
+    byte laps;
+    byte flags;
+    struct OBJECT {
+        short x <bgcolor=0xBDC703>;
+        short y <bgcolor=0x79FF79>;
+        ubyte z <bgcolor=0xA0A0FF>;
+        byte flag;
+        byte index;
+        byte heading <bgcolor=0xFE9F9F>;
+    } object[ numObjects ];
+} file;

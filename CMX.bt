@@ -1,0 +1,117 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: CMX Live For Speed
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef signed short word;
+typedef unsigned int col;
+struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
+        byte game_version; //ignore
+        byte game_revision <bgcolor=0x9F9FFE ,format=hex>; //ignore
+        byte CMX_version <bgcolor=0x9FAFFF ,format=hex>; //don't read file if increased
+        byte export_type<comment = "track : 0 / car : 1">;
+        byte zero[6]; //0
+        char name[32];
+        col ground_colour<format=hex>; //rgb0
+        byte zero1[8];
+        float sky_horiz<comment = "radius of sky dome">;
+        float sky_vert<comment = "height of sky dome">;
+        int num_lightschemes;
+        int num_configs;
+        int num_textures;
+        int num_objects;
+};
+struct LIGHTSCHEME {
+        char lightscheme_name[16]<comment = "name">;
+        char sky_texture_name[16]<comment = "texture">;
+        char environment_texture[16]<comment = "texture">;
+        col  sky_colour <format=hex,comment = "rgb0 - average sky colour">;
+        col  sun_colour <format=hex,comment = "rgb0 - artist defined">;
+        float sun_intensity <comment = "sun colour multiplier">;
+        float sky_boost<comment = "sky colour multiplier">;
+        float sun_heading <comment = "radians, CCW from forward(Y)">;
+        float sun_pitch <comment = "radians, up from ground">;
+};
+struct CONFIG {
+        char config_name[16]<comment = "name">;
+        int num_nodes<comment = "num nodes">;
+};
+struct NODE {
+        int centre_X;
+        int centre_Y;
+        int centre_Z;
+        float dir_X;
+        float dir_Y;
+        float dir_Z;
+        float limit_left;
+        float limir_right;
+        float drive_left;
+        float drive_right;
+        
+};
+struct TEXTURE {
+        char texture_name[16]<comment = "name">;
+        int flags<comment = "64 : shiny - use environment map | 128 : custom - user defined skin">;
+};
+struct TEXTUREINFO {
+            byte flags;
+            char zero;
+            char texture_index;
+            char surface_type;
+            word num_pointss;
+            word num_triss;
+        
+};
+ struct POINT {
+
+        int     X;
+        int     Y;
+        int     Z;
+        float   NX;
+        float   NY;
+        float   NZ;
+        float   U;
+        float   V;
+        int     colour<format=hex>;
+};
+
+struct TRIANGLE {
+
+        word    vertex_A;
+        word    vertex_B;
+        word    vertex_C;
+        word    flags;               // bit 0 : GLASS
+};
+struct OBJECT {
+        int centre_X;
+        int centre_Y;
+        int centre_Z;
+        int radius;
+        word object_configs;
+        word object_flags;
+        word num_textures;
+        word num_points;
+        word num_tris;
+        word zero;
+        TEXTUREINFO Texture_info[Objects.num_textures];  
+        POINT Points[Objects.num_points]; 
+        TRIANGLE Tris[Objects.num_tris];     
+        
+};
+
+struct FILE{
+struct HEADER Head;
+struct LIGHTSCHEME Light_scheme[Head.num_lightschemes];
+//struct CONFIG Configures[Head.num_configs]<comment = "track exports only">;
+//struct NODE Nodes[Configures.num_nodes]<comment = "track exports only">; 
+struct TEXTURE Textures[Head.num_textures];
+struct OBJECT Objects[Head.num_objects] <optimize=false>;
+} file <optimize=false>;

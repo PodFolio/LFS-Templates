@@ -1,0 +1,65 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: SMX Live For Speed
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef signed short word;
+typedef unsigned int col;
+struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
+        byte game_version; //ignore
+        byte game_revision <bgcolor=0x9F9FFE ,format=hex>; //ignore
+        byte SMX_version <bgcolor=0x9FAFFF ,format=hex>; //don't read file if increased
+        byte dimensions<comment = "always 3">;
+        byte resolution<comment = "0 high 1 low">;
+        byte vertex_colours<comment = "1 : do not read if different">;
+        byte zero[4]; //0
+        char track[32];
+        byte ground_col_R<comment = "red">;
+        byte ground_col_G<comment = "green">;
+        byte ground_col_B<comment = "blue">;
+        byte zero1[9];
+        int num_objects;
+};
+struct POINT {
+
+        int     X;
+        int     Y;
+        int     Z;
+        int     colour<format=hex>;
+};
+
+struct TRIANGLE {
+
+        word    vertex_A;
+        word    vertex_B;
+        word    vertex_C;
+        word    flags;               // bit 0 : GLASS
+};
+struct OBJECT {
+        int centre_X;
+        int centre_Y;
+        int centre_Z;
+        int radius;
+        int num_points;
+        int num_tris;
+        POINT Points[Objects.num_points]; 
+        TRIANGLE Tris[Objects.num_tris];     
+        
+};
+struct FOOTER { // (after all the objects)
+        int  num_cp_objects<comment = "number of checkpoint objects">;
+        int  object_index[num_cp_objects]<comment = "index of each cp object">;
+};
+struct FILE{
+struct HEADER Head;
+struct OBJECT Objects[Head.num_objects] <optimize=false>;
+struct FOOTER Foot;
+} file <optimize=false>;

@@ -1,0 +1,224 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: DSH Live For Speed Dash
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+string angle (ubyte &i) {
+    string ang;
+    SPrintf(ang, "%d",((ubyte)i *5));
+    return ang;
+}
+string radius (ubyte &i) {
+    string ra;
+    SPrintf(ra, "%0.3f",(((float)i/100)/2));
+    return ra;
+}
+string minusto (ubyte &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",(((float)i-100) /100));
+    return hun;
+}
+string sto (ubyte &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i /100));
+    return hun;
+}
+
+struct RPMdiode {
+    ubyte CentreX <comment=minusto>;
+    ubyte CentreY <comment=minusto>;
+    ubyte Number;
+    ubyte Spacing <comment=sto>;
+    ubyte Size <comment=sto>;
+    ubyte empty;
+    ubyte empty1;
+};
+
+struct RPMled {
+    ubyte CentreX <comment=minusto>;
+    ubyte CentreY <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte XRadius <comment=sto>;
+    ubyte YRadius <comment=sto>;
+    ubyte InnerStart <comment=sto>;
+    ubyte InnerEnd<comment=sto>;
+    ubyte TextOut <comment=sto>;
+    ubyte TextSize <comment=sto>; 
+    ubyte empty;
+    ubyte empty1;  
+};
+struct SpeedoAnalog {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte Radius <comment=radius>; 
+    ubyte empty[3];  
+};
+struct Indicator {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte Size <comment=sto>;
+    ubyte Type<comment="0: diode, 1: pictogram, 2: only with Shared/Left/Right Indicator">;
+};
+struct Dash {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte Width <comment=sto>;
+    ubyte Height <comment=sto>;
+};
+struct Dash2 {
+    ubyte X <comment=minusto>;
+    ubyte Y <comment=minusto>;
+    ubyte StartAngle <comment=angle>;
+    ubyte TurnAngle <comment=angle>;
+    ubyte Radius <comment=radius>;
+    ubyte em_p[3];
+};
+struct DColor {
+    ubyte R;
+    ubyte G;
+    ubyte B;
+    ubyte X;
+};
+
+
+struct {
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>;
+        byte empty;
+        byte version <bgcolor=0x9F9FFE ,format=hex>;
+
+
+    } header;
+        int DashType<comment="1: s_clock, 2:s_clock_white 3: s_clock_formula">;
+        int size;
+        if (size > 0)
+        {
+            byte LCD <bgcolor=0x9FAFFF,comment="0: Gear:led RPM:led, 1: Gear:led RPM:led, 2: Gear:led RPM:led, 3 gear diode, 4: Gear:led RPM:diode, 5: Gear:diode RPM:diode 7: rpm led, 47:s_clock gear:on, rpm:on 82: s_clock Gear OFF">;
+            byte SpeedoDigital<comment="0: Analog, 1:Oil temp ON, 2: Oil pressure ON, 3: Oil temp/pressuer ON, 4: Digital">;
+            byte un[2];
+            if (DashType == 3)
+            {
+                if (LCD == 0 || LCD == 1 || LCD == 2)
+                {
+                    RPMled Tacho;
+               
+                }
+                else
+                {
+                    RPMdiode Tacho;
+               
+                }
+            }
+            else if (DashType == 1)
+            {
+                if (LCD == 58)
+                {
+                    byte MFDisp<comment="0: Off, 1: vws, 2: 123 3: digi 123">;
+                    byte emp2;
+                    byte emp3;
+                    byte emp4;
+                    int emp;
+                    Indicator unknn;
+                    //SpeedoAnalog Tacho;
+                }
+                
+                
+            }
+
+            else
+            {
+                    byte MFDisp<comment="0: Off, 1: vws, 2: 123 3: digi 123">;
+                    byte empt2;
+                    byte empt3;
+                    byte empt4;
+               
+            }
+        DColor MFDcol1;
+        DColor MFDcol2;    
+        Indicator ShiftLight;
+        Indicator FullBeam;
+        Indicator Handbrake;
+        Indicator PitLimiter;
+        Indicator TractionControl;
+        Indicator LeftIndicator;
+        Indicator RightIndicator;
+        Indicator SharedIndicator;
+        Indicator OilPresure;
+        Indicator Battery;
+        Indicator ABS;
+        Indicator un3;
+        Dash Sometin;
+        Dash Gear;
+        if (size !=80)
+        {
+        Dash MultiFunctionDisp;
+        Dash BR_SpeedoDig;
+        }
+        if (DashType == 1 || DashType == 2)
+        {
+            if ((LCD == 0 && SpeedoDigital == 0))
+            {
+                Dash som;
+                Dash2 Speedo;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                Dash2 OilPressure;
+                
+            }
+            else if (LCD == 0 && SpeedoDigital == 4)
+            {
+                Dash SpeedoDig;
+                Dash2 Somee;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                Dash2 OilPressure;
+                //Indicator un4;
+            }
+            else
+            {
+                Dash2 Speedo;
+                Dash2 Tacho;
+                Dash2 FPS;
+                Dash2 TimeClock;
+                Dash2 WaterTemp;
+                Dash2 Fuel;
+                Dash2 OilTemp;
+                //Dash2 OilPressure;
+                //Indicator un4;
+                if (size ==144)
+                {
+                    
+                    Dash2 OilPressure;
+                    Indicator unknn2;
+                }
+                else if (size ==160)
+                {
+                    
+                    Dash2 OilPressure;
+                    Indicator unknn2;
+                    Dash2 unknn3;
+                    Dash2 unknn4;
+                }
+            }
+        }
+        
+    }    
+}Dashboard;

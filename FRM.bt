@@ -1,0 +1,45 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct UN
+{
+        hfloat ann[6];
+        float ann1;
+        float ann1;
+};
+struct UN2
+{
+        byte un1;
+        byte un2;
+        byte un3;
+        byte un4;
+        float TUBEmass;
+        int un6;
+       
+};
+    
+
+struct FILE{
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>;
+        byte empty;
+        byte version <bgcolor=0x9F9FFE ,format=hex>;
+
+
+    } header;
+    int pointCount;
+    UN unn[pointCount];
+    int tCount;
+    UN2 unn2[tCount];
+
+}file;

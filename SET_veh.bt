@@ -1,0 +1,145 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: SET Live For Speed
+//   Authors: Draggo & Ganjaman
+//   Version: 3
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef unsigned short word2;
+
+string ten (byte &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i /10));
+    return hun;
+}
+string mten (byte &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i *10));
+    return hun;
+}
+
+enum <byte> TyreBrand {
+    Cromo_Plain = 0,
+    Cromo = 1,
+    Torro = 2,
+    Michelin = 3,
+    Evostar = 4,
+    BridgeStone = 5,
+    AVON = 6
+};
+
+enum <byte> CenterDiffType  {
+    Open = 0,
+    Viscous = 1
+};
+
+enum <byte> TyreGripType {
+    R1 = 0,
+    R2 = 1,
+    R3,
+    R4,
+    SUPER,
+    NORMAL,
+    HYBRID,
+    KNOBBLY
+};
+
+enum <byte> WheelDiffType  {
+    Open_ = 0,
+    Locked = 1,
+    Viscous_ = 2,
+    LSD = 3
+};
+
+enum <byte> PassengerType {
+    NONE,
+    MALE,
+    FEMALE
+};
+
+struct setFlags{
+    byte version : 1;
+    byte TC : 1;
+    byte ABS : 1;
+    byte none: 1;
+    byte none: 1;
+    byte none: 1;
+    byte none: 1;
+    byte asymetric: 1;
+
+};
+
+struct PASSENGERS{
+    PassengerType FR : 2;
+    PassengerType RL : 2;
+    PassengerType RC : 2;
+    PassengerType RR : 2;
+};
+
+struct HEADER_ {
+        byte fversion <bgcolor=0x9FAFFF ,format=hex, comment="File format version">;
+        byte empty1[3];
+};
+struct SUSPENSION {
+    float Ride_Height <comment="NOT spring motion range">; 
+    float Spring_Stiffness <comment="N/mm">;        
+    float Bump_Damping <comment="N/mm">;            
+    float Rebound_Damping <comment="N/mm">;         
+    float Anti_Roll_Bar <comment="Stiffness (N/mm)">; 
+    float Reserved6;                      
+    byte Toe <comment="0=-0.9deg, 9=0deg, 18=0.9deg">; 
+    byte Caster <comment=ten>;          
+    TyreGripType Tyre_Type; 
+    byte HL_Tyre_Temp;                         
+    byte Left_Camber_Adjust <comment="45=0.0deg, 0=-4.5deg, 90=4.5deg">; 
+    byte Right_Camber_Adjust <comment="45=0.0deg, 0=-4.5deg, 90=4.5deg">; 
+    byte HL_Tire_Temp;                         
+    byte Diff_Clutch_Preload <comment=mten>; 
+    WheelDiffType Diff_Type; 
+    byte Viscous_Torque;                            
+    byte Power_Locking;                             
+    byte Coast_Locking;                             
+    word2 Left_Tyre_Pressure <comment="kPa">;                
+    word2 Right_Tyre_Pressure <comment="kPa">;  
+};
+
+struct SETUP{
+    HEADER_ header;
+    setFlags Setup_Bits;
+    byte unknown;
+    byte Handicap_Mass_Position;  
+    TyreBrand Tyre_Brand;
+    float Brake_Strength;
+    byte Rear_Wing_Angle;
+    byte Front_Wing_Angle;
+    byte Handicap_Mass;
+    byte Intake_Restriction;
+    byte Max_Steering_Lock;
+    byte Parallel_Steering;
+    byte Brake_Balance;
+    byte Engine_Brake_Reduction;   
+    CenterDiffType Centre_Diff_Type;
+    byte Centre_Diff_Viscous_Torque;
+    byte unk9;
+    byte Centre_Diff_Torque_Split;
+    word2 Gear_Ratio_7<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_Final<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_1<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_2<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_3<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_4<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_5<comment="(0 to 65536 = 0.5 to 7.5)">;
+    word2 Gear_Ratio_6<comment="(0 to 65536 = 0.5 to 7.5)">;
+    PASSENGERS Passengers;
+    byte Car_Config<comment="Car Config (roof on LX4/6 and UF1)">;
+    byte Traction_Control_Slip<comment=ten>;
+    byte Traction_Control_Speed;
+    SUSPENSION Rear;
+    SUSPENSION Front;
+    
+};

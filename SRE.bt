@@ -1,0 +1,325 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: Live For Speed VOB
+//   Authors: turbosnail
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+//local int newFile = FileNew();
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+
+typedef struct
+{
+    int X<read=i2f>;
+    int Y<read=i2f>;
+    int Z<read=i2f>;
+} Vector3;
+
+typedef struct
+{
+    word rX; // 32768 - 180 g
+    word rY;
+    word rZ;
+} Vec3R;
+
+string i2f (int &i) {
+    string str;
+    SPrintf(str, "%3.3f",((float)i / 65536.0f));
+    return str;
+}
+string rotate (uint &i) {
+    string str;
+    uint h = i & 2047;
+    if(h > 720)
+        h -= 2048;
+
+    uint p = (i >> 11) & 2047;
+    if(p > 360)
+        p -= 1024;
+
+    uint r = (i >> 21);
+    if(r > 720)
+        r -= 2048;
+
+    SPrintf(str, "h:%3.2f p:%3.2f r:%3.2f", (float)h, (float)p/4.0f, (float)r/4.0f);
+    return str;
+}
+
+struct Header // 32 bytes
+{
+    char    FileType[7];    //7
+    byte    Na; 
+
+};
+
+struct Child // 44
+{
+    byte Flag<comment = "13 always">;
+    byte Type<comment = "00 - main mesh, 01 - calip, 02 - wheel, 03 - normal, 05 - not hide in F mode, 06 - rear df point, 07 - front df point, 08 - middle df point, 0A - mirror, 0D - rotor",bgcolor=0x933EC5>;
+    byte FlipState<comment = "1 - static, 2 - full flip, 3 - swap side">;
+    byte LODsCount;
+    char Name[20];
+    byte SubObjState<comment = "MIRRORED = 1, CUSTOM_COLOR = 2, ALWAYS = 224 (E3 - Mirror only, E2 - Mirror fix possible)">;
+    byte unk2;
+    byte unk3;
+    byte sp;
+};
+enum SUB_OBJ_STATE {
+    MIRRORED = 1,
+    CUSTOM_COLOR = 2,
+    ALWAYS = 224
+};
+
+struct LODInfo {
+    ushort  unk3;
+    ushort  LODdistance;
+};
+
+
+struct GeometryInfo{
+    ushort    NumVertex;      //2
+    ushort    NumFaces;       //2
+    uint    SubObjectsCount;    //number of child meshes
+    Vec3R   rotate;
+    word    Zero;
+    Vector3 pos;            // position
+};
+
+
+struct ObjectName // 16 byte
+{
+    byte R; // Red
+    byte G; // Green
+    byte B; // Blue
+    byte X; // N/A
+    char Name[10];
+};
+
+struct Vertex // size = 16 byte
+{
+    int Flag<comment = "0=OFF, 1=MIRROR, 2=FIX_CENTER, 16=REFERENCED, 64=DARK, 128=VERY_DARK, 192=EXT_DARK">;
+    int X<read=i2f>; // 65536 = 1m
+    int Y<read=i2f>; // 65536 = 1m
+    int Z<read=i2f>; // 65536 = 1m
+
+};
+
+struct Faces // 12 bytes
+{
+    byte MirrorState<comment = " MIRROR_OFF = 0, MIRROR_ON = 1, OLOLO_2 = 2, GLASS = 4, OLOLO_8 = 8, MIRROR_FIX = 16,DOUBLE_SIDE = 32">;
+    byte LayoutID; // Car Layout ID
+    byte MapID;
+    byte NCLevel<comment = " 0: zero, 1: low, 2:medium, 3:high">;
+    byte LodID<comment = "Colision">;
+    byte Group; // 
+    u_word Ind1;
+    u_word Ind2;
+    u_word Ind3;
+};
+
+enum MIRROR_STATE
+{
+    MIRROR_OFF = 0,
+    MIRROR_ON = 1,
+    OLOLO_2 = 2,
+    GLASS = 4,
+    OLOLO_8 = 8,
+    MIRROR_FIX = 16,
+    DOUBLE_SIDE = 32
+};
+
+struct Texture // 20 byte
+{
+    int  Flag<comment = "1 - locate in /skins_dds/CAR_DEFAULT.dds">;
+    char Name[20]<comment = "filename in /data/dds texture name">;
+};
+
+//struct TextureDescriptions // 24 byte
+//{
+//    char    Name[16]; //16
+ //   byte    skyReflection<comment = "bit 0 : sky reflection">;
+ //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
+ //   byte    TextureId<comment = "world texture index">;
+ //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
+ //   byte    UTile;          // 64 = 1.0
+ //   byte    VTile;          // 64 = 1.0
+  //  byte    Uoffset;           // 64 = 1.0
+ //   byte    Voffset;           // 64 = 1.0
+
+//};
+
+struct CutOut
+{
+    char name[16];
+    byte rotate<comment = " bitwise 1 - rotate 90, 2- rotate 180, 3 - rotate 270,  4 - flip">;
+    byte Flag;
+    ushort PageId;
+    byte AlphaType<comment = "0 - solid, 1 - Alpha test, 3 - Alpha, 4 - Tree edge alpha">;
+    byte EnvMapType<comment = "0 - matt, 1 - constant shine, 2 - var shine, 3 - overlay or plain">;
+    byte ShineType<comment = "0 - none, 1 - paint, 2 - glass, 3 - metall, 4 - water, 5 - asphalt, 6 - rubber, 7 - plastic">;
+    byte Sp<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark (not used)">;
+    struct {
+        byte R;
+        byte G;
+        byte B;
+    } ReflectionColor;
+    byte Roughness<comment = "100 = 1.0">;
+    byte sizeX<comment = "128 = 100%">;
+    byte sizeY<comment = "128 = 100%">;
+    byte posX<comment = "128 = 100%">;
+    byte posY<comment = "128 = 100%">;
+};
+
+struct Map
+{
+    char name[16];
+    struct {
+        byte R;
+        byte G;
+        byte B;
+    } Color;
+    byte Sp;
+    int  Flag; // bitwise 0-no, 1-central 16 - link to top
+    // step 0.25 
+    // heading = step
+    // pitch = step >> 11
+    // roll = step >> 21
+    uint  rotate<read=rotate>; // heading + pitch + roll
+
+    struct {
+        int R<read=i2f>;
+        int F<read=i2f>;
+        int U<read=i2f>;
+    } locate;
+    
+    int Width<read=i2f>;
+    int Height<read=i2f>;
+    ushort CutOutId;
+    ushort CutOutIdOpposite;
+    
+};
+
+
+//local u_word Ind1_ = 0;
+//local u_word Ind2_ = 0;
+//local u_word Ind3_ = 0;
+//local int i = 1; 
+//local int j = 1;
+
+
+Header head;
+struct {
+    Child Chld  <bgcolor=cRed>;
+
+    struct  LODInfo lodinf[Chld.LODsCount];
+
+    struct GeometryInfo Geometry;
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+
+    int    countPage;
+    struct Texture Textures[countPage];
+
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+    
+    ushort MaterialCount <bgcolor=cYellow>;
+    ushort u2;
+    struct Map Materials[MaterialCount]; 
+   
+//for (i=1; i<Main.Geometry.NumVertex; i++)
+    //{
+   // FPrintf( newFile, "v  %f %f %f \n", Main.Vert[i].X/65536.0f, Main.Vert[i].Y/65536.0f, Main.Vert[i].Z/65536.0f);
+
+   // }
+    //FPrintf( newFile,"g  object\n");
+//for (j=1; j<Main.Geometry.NumFaces; j++)
+  //  {
+//Ind1_ = Main.Face[j].Ind1;
+//Ind2_ = Main.Face[j].Ind2;
+//Ind3_ = Main.Face[j].Ind3;
+  //  if (Main.Face[j].Ind1 < 0) {
+	//		Ind1_ = Main.Face[j].Ind1 + 32768;
+//		}
+		
+	//	if (Main.Face[j].Ind2 < 0) {
+	//		Ind2_ = Main.Face[j].Ind2 + 32768;
+	//	}
+		
+	//	if (Main.Face[j].Ind3 < 0 ) {
+	//		Ind3_ = Main.Face[j].Ind3 + 32768;
+	//	}
+
+    //Ind1_ += 1;
+   // Ind2_ += 1;
+   // Ind3_ += 1;
+
+   // if (Main.Face[j].MapID == 14)
+   // {
+    //FPrintf( newFile, "f  %d %d %d \n", Ind1_, Ind2_, Ind3_);
+    //}
+//}
+
+    if(Chld.Type == 0) {
+            struct {
+            char name[8];
+            } layouts[16];
+        
+            byte ZERO[128];
+        }
+} Main;
+struct {
+     Child Chld  <bgcolor=cRed>;
+
+    struct  LODInfo lodinf[Chld.LODsCount];
+
+    struct GeometryInfo Geometry;
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+    
+//for (i=1; i<Main.MainGeometry.NumVertex; i++)
+   // {
+   // FPrintf( newFile, "v  %f %f %f \n", MainVert[i].X/65536.0f, MainVert[i].Y/65536.0f, MainVert[i].Z/65536.0f);
+   // }
+   // FPrintf( newFile,"g  object\n");
+   // for (i=0; i<Main.MainGeometry.NumFaces; i++)
+   // {
+   // FPrintf( newFile, "f  %d %d %d \n", MainFace[i].Ind1, MainFace[i].Ind2, MainFace[i].Ind3);
+   // }
+    //if ( ((MainChld.Key & 192) != 192) && ((MainChld.Key & 98) != 98) && ((MainChld.Key & 66) != 66) ) {
+        //int u[MainChld.NaCount];
+    //}
+    //uint MainTextureFileCount;
+    int    countPage;
+    struct Texture Textures[countPage];
+
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+    
+    ushort MaterialCount <bgcolor=cYellow>;
+    ushort u2;
+    struct Map Materials[MaterialCount];    
+
+
+    if(Chld.Type == 0) {
+            struct {
+            char name[8];
+            } layouts[16];
+        
+            byte ZERO[128];
+        }
+
+
+} SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;
+

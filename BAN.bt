@@ -1,0 +1,114 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: Live For Speed VOB
+//   Authors: turbosnail
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+//local int newFile = FileNew();
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+//local int i; 
+
+typedef struct
+{
+    int X<read=i2f>;
+    int Y<read=i2f>;
+    int Z<read=i2f>;
+} Vector3;
+
+typedef struct
+{
+    word rX; // 32768 - 180 g
+    word rY;
+    word rZ;
+} Vec3R;
+
+string i2f (int &i) {
+    string str;
+    SPrintf(str, "%3.3f",((float)i / 65536.0f));
+    return str;
+}
+string rotate (uint &i) {
+    string str;
+    uint h = i & 2047;
+    if(h > 720)
+        h -= 2048;
+
+    uint p = (i >> 11) & 2047;
+    if(p > 360)
+        p -= 1024;
+
+    uint r = (i >> 21);
+    if(r > 720)
+        r -= 2048;
+
+    SPrintf(str, "h:%3.2f p:%3.2f r:%3.2f", (float)h, (float)p/4.0f, (float)r/4.0f);
+    return str;
+}
+
+struct Header // 32 bytes
+{
+    char head[6] <bgcolor=0x67D8D8>;
+    byte empty;
+    byte version <bgcolor=0x9F9FFE ,format=hex>;
+    byte revision <bgcolor=0x9FAFFF ,format=hex>;
+    byte empty1;
+    byte flag;
+    byte empty3;
+
+};
+
+
+struct Ani // 44 byte
+{
+    byte unk1 <bgcolor=0x9FAFFF ,format=hex>;
+    byte unk1_2;
+    byte unk1_3;
+    byte unk1_4;    
+    float unk2;
+    int unk3;
+};
+struct Some
+{
+    int unk1;
+    float unk2;
+    float unk3;
+    float unk4;
+    int unk5;
+    int unk6;
+    int unk7;
+    float unk8;
+    float unk9;
+    float unk10;
+    int unk11;
+
+};
+
+
+Header head;
+
+byte nk2;
+byte nk3;
+byte nk4;
+int zero;
+byte nk5;
+byte nk6;
+byte nk7;
+byte nk8;
+byte nk8;
+byte nk8;
+byte nk8;
+byte nk8;
+byte nk8;
+
+float nk1;
+Ani Someshit;
+Some So2[Someshit.unk3];
