@@ -1,0 +1,85 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: SPR Live For Speed Engine
+//   Authors: Draggo
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef signed short word;
+typedef unsigned int time;
+struct FILE{
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
+        byte version_high; //ignore
+        byte version_low <bgcolor=0x9F9FFE ,format=hex>; //ignore
+        byte SPRversion <bgcolor=0x9FAFFF ,format=hex>; //ignore
+        byte reserved[2]; //-
+    } header;
+    byte qual_mins; //qualifying time
+    byte laps; //laps / hours
+byte skill; //skill level (0,1,2,3,4)
+byte wind; //0=off 1=weak 2=strong
+byte hotlap_mode; // 0=no 1=yes 2=custom 3=invalid
+char LFS_version[8]<bgcolor=0xBDC703>; //text, ends 0
+char short_track_name[4]<bgcolor=0xBDC703>; // e.g. BL2R
+byte added_mass; // hotlap only
+byte intake_restrict; // hotlap only
+byte abs_enabled; // hotlap only
+byte null; //-
+char track_name[32]<bgcolor=0xBDC703>;// text, ends 0
+char user_name[32]<bgcolor=0xBDC703>; // text, ends 0
+char car_name[32]<bgcolor=0xBDC703>;// text, ends 0
+byte config;// 1,2,3... (first config is 1)
+byte reversed;// 0=no 1=yes
+byte weather; // 0,1,2... (first weather is 0)
+byte number_of_drivers; // total cars in race
+word player_flags;// driver settings
+byte hlvc_best_lap; // the lap of the split times
+byte number_of_splits; // including lap time
+time split_1; // msht time (first check point) [min | sec | 100ths | 1000ths]
+time split_2;// msht time
+time split_3; // msht time
+time split_4; // msht time
+int  flags; // -
+int  replay_length; // centiseconds (0 if unknown)
+char local_driver_name[32]<bgcolor=0xBDC703>;// including colours
+int unk1; 
+int unk2;
+char local_driver_skin_name[20]<bgcolor=0xBDC703>;
+char local_driver_helmet_skin_name[20]<bgcolor=0xBDC703>;
+if (header.SPRversion == 20)
+{
+int unk3[279];
+}
+else
+{
+int unk3[231];
+}
+int unk4;
+if (header.SPRversion == 16)
+{
+int unk4_5[3];
+}
+
+char driver_name[24]<bgcolor=0xBDC703>;// including colours
+char driver_number_plate[8]<bgcolor=0xBDC703>;
+byte unk5[4];
+byte unk6[4];
+char driver_helmet_skin_name[16]<bgcolor=0xBDC703>;
+int unk7;
+char driver_car_name[32]<bgcolor=0xBDC703>;
+int car_setup[30];
+int car_colours[12];
+byte unk8[4];
+struct SOME {
+        byte u1[4];
+        short x;
+        short y;
+
+    } some[ replay_length ];
+} file;
