@@ -163,8 +163,29 @@ enum SUB_OBJ_STATE {
     ALWAYS = 224
 };
 
+enum <byte> ConectTo {
+    Lights = 0,
+    Ignition = 1,
+    RearFog = 2,
+    FtontFog = 3,
+    LeftInd = 4,
+    RightInd = 5,
+    Extra = 6,
+    Horn = 7,
+    Siren = 8
+};
+
+enum <byte> RotationAxis {
+    Roll = 0,
+    LocalX = 1,
+    Pitch = 2,
+    LocalZ = 3,
+    Heading = 4
+};
+
 struct LODInfo {
-    ushort  unk3;
+    RotationAxis  Rotation_Axis;
+    ConectTo Connect_To;
     ushort  LODdistance;
 };
 
@@ -952,6 +973,7 @@ struct {
     byte na1;
     short na3;
     struct Surface srf[SurfaceCount];
+
 
 } Rim[1] <optimize=false>;
 Areodynamics aero;
