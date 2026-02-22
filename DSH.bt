@@ -6,10 +6,11 @@
 //   Version: 1
 //   Purpose: 
 //  Category: 
-// File Mask: 
-//  ID Bytes: 
+// File Mask: *.dsh
+//  ID Bytes: LFSDSH
 //   History: 
 //------------------------------------------------
+//pasuje do bt_test.dsh
 string angle (ubyte &i) {
     string ang;
     SPrintf(ang, "%d",((ubyte)i *5));
@@ -30,6 +31,7 @@ string sto (ubyte &i) {
     SPrintf(hun, "%0.2f",((float)i /100));
     return hun;
 }
+
 
 struct RPMdiode {
     ubyte CentreX <comment=minusto>;
@@ -83,7 +85,7 @@ struct Dash2 {
     ubyte Radius <comment=radius>;
     ubyte em_p[3];
 };
-struct DColor {
+struct DColour {
     ubyte R;
     ubyte G;
     ubyte B;
@@ -103,9 +105,11 @@ struct {
         int size;
         if (size > 0)
         {
-            byte LCD <bgcolor=0x9FAFFF,comment="0: Gear:led RPM:led, 1: Gear:led RPM:led, 2: Gear:led RPM:led, 3 gear diode, 4: Gear:led RPM:diode, 5: Gear:diode RPM:diode 7: rpm led, 47:s_clock gear:on, rpm:on 82: s_clock Gear OFF">;
+            byte LCD <format =binary, bgcolor=0xBDC703>;
+            //byte LCD <bgcolor=0x9FAFFF,comment="0: Gear:led RPM:led, 1: Gear:led RPM:led, 2: Gear:led RPM:led, 3 gear diode, 4: Gear:led RPM:diode, 5: Gear:diode RPM:diode 7: rpm led, 47:s_clock gear:on, rpm:on 82: s_clock Gear OFF">;
             byte SpeedoDigital<comment="0: Analog, 1:Oil temp ON, 2: Oil pressure ON, 3: Oil temp/pressuer ON, 4: Digital">;
-            byte un[2];
+            byte un1;
+            byte un2;
             if (DashType == 3)
             {
                 if (LCD == 0 || LCD == 1 || LCD == 2)
@@ -131,7 +135,11 @@ struct {
                     Indicator unknn;
                     //SpeedoAnalog Tacho;
                 }
-                
+
+                byte MFDisp<comment="0: Off, 1: vws, 2: 123 3: digi 123">;
+                byte emp2;
+                byte emp3;
+                byte emp4;
                 
             }
 
@@ -143,28 +151,49 @@ struct {
                     byte empt4;
                
             }
-        DColor MFDcol1;
-        DColor MFDcol2;    
-        Indicator ShiftLight;
-        Indicator FullBeam;
-        Indicator Handbrake;
-        Indicator PitLimiter;
-        Indicator TractionControl;
-        Indicator LeftIndicator;
-        Indicator RightIndicator;
-        Indicator SharedIndicator;
-        Indicator OilPresure;
-        Indicator Battery;
-        Indicator ABS;
-        Indicator un3;
-        Dash Sometin;
-        Dash Gear;
-        if (size !=80)
-        {
-        Dash MultiFunctionDisp;
-        Dash BR_SpeedoDig;
-        }
-        if (DashType == 1 || DashType == 2)
+        DColour MFDcol1;
+        DColour MFDcol2;    
+        Indicator ShiftUp;//.
+        Indicator HighBeam;//.
+        Indicator Handbrake;//.
+        Indicator PitLimiter;//.
+        Indicator TractionControl;//.
+        Indicator LeftIndicator;//.
+        Indicator RightIndicator;//.
+        Indicator SharedIndicator;//.
+        Indicator OilPresure;//.
+        Indicator Battery;//.
+        Indicator ABS;//.
+        Indicator Engine;//.
+        Indicator RearFog;//?
+        Indicator FrontFog;//?
+        Indicator LowBeam;//.
+        Indicator LowFuel;//.
+        Indicator Sidelights;//.
+        Indicator Neutral;//.
+        Indicator nil[6];
+        Dash LEDgear;
+        Dash nill;
+        Dash unknown;
+        Dash DigitalSpeedo;
+        //if (size !=80)
+        //{
+        Dash2 AnalogSpeedo;
+        Dash2 Tacho;
+
+        Dash2 TurboGauge;
+        Dash2 TimeClock;
+        Dash2 WaterTemperature;
+        Dash2 FuelGauge;
+        Dash2 OilTemperature;
+        Dash2 OilPressure;
+        DColour TextColour;
+        DColour BackgroundColour;
+        DColour LEDgear_digSpeedColour;
+        DColour NeedleColour;
+
+        //}
+        /*if (DashType == 1 || DashType == 2)
         {
             if ((LCD == 0 && SpeedoDigital == 0))
             {
@@ -218,7 +247,7 @@ struct {
                     Dash2 unknn4;
                 }
             }
-        }
+        }*/
         
     }    
 }Dashboard;

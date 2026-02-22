@@ -1,16 +1,3 @@
-//------------------------------------------------
-//--- 010 Editor v7.0.2 Binary Template
-//
-//      File: Live For Speed VOB
-//   Authors: turbosnail
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
-//   History: 
-//------------------------------------------------
-//local int newFile = FileNew();
 typedef unsigned char byte;
 typedef signed short word;
 typedef unsigned short u_word;
@@ -54,13 +41,6 @@ string rotate (uint &i) {
     return str;
 }
 
-struct Header // 32 bytes
-{
-    char    FileType[7];    //7
-    byte    Na; 
-
-};
-
 struct Child // 44
 {
     byte Flag<comment = "13 always">;
@@ -90,14 +70,20 @@ struct GeometryInfo{
     ushort    NumFaces;       //2
     //uint    SubObjectsCount;    //number of child meshes
     byte SubObjectsCount;
-    byte uk;
+        byte uk1;
     byte colors;
-    byte uk2;
+    byte uk3;
     Vec3R   rotate;
     word    Zero;
     Vector3 pos;            // position
 };
-
+struct Col
+{
+    byte R; // Red
+    byte G; // Green
+    byte B; // Blue
+    byte X; // N/A
+};
 
 struct ObjectName // 16 byte
 {
@@ -141,14 +127,6 @@ enum MIRROR_STATE
     OLOLO_8 = 8,
     MIRROR_FIX = 16,
     DOUBLE_SIDE = 32
-};
-
-struct Col
-{
-    byte R; // Red
-    byte G; // Green
-    byte B; // Blue
-    byte X; // N/A
 };
 
 struct Texture // 20 byte
@@ -229,112 +207,140 @@ struct Map
 //local int i = 1; 
 //local int j = 1;
 
+struct Head
+{
+byte Signature;
+ byte un2;
+ //WORD sp0;
+ //float un4;
+ //float un5;
+ //float scale;
+ //float un6;
+ //float un7;
+ //float un8;
+ //float un9;
+ byte un10;
+ byte collision;
+ //WORD un11;
+};
 
-Header head;
-struct {
-    Child Chld  <bgcolor=cRed>;
+struct Header // 32 bytes
+{
+    char    FileType[7];    //7
+    byte    filever;             //1 F9 or FA or FB else crash game
+    byte    non[4];
+    byte    idk;
+    byte    idk2;
+    byte    idk3;
+    byte    idk4;
+    int     non2[4];
+    //byte    idk5;
+    //byte    non3[3];
+    //byte    non4[4];
+};
 
-    struct  LODInfo lodinf[Chld.LODsCount];
 
-    struct GeometryInfo Geometry;
-    struct Vertex Vert[Geometry.NumVertex];
-    struct Faces  Face[Geometry.NumFaces];
-    struct Col Colours[Geometry.colors];
-    int    countPage;
-    struct Texture Textures[countPage];
+Header mhead;
+struct{
+    struct {
+        int type<bgcolor=cGreen>;
+        if (Main.type == 0)
+        {
+            int unnnk1<bgcolor=cYellow>;
+            int unnnk2<bgcolor=cYellow>;
+            if (unnnk2 == 0)
+            {
+                int unnnk3<bgcolor=cYellow>;
+                if (unnnk3 == 0)
+                {
+                int unnnk4<bgcolor=cYellow>;
+                if (unnnk4 == 0)
+                    {
+                int unnnk5<bgcolor=cYellow>;
+                if (unnnk5 == 0)
+                        {
+                    int unnnk6<bgcolor=cGreen>;
+                    if (unnnk6 == 0)
+                            {
+                        int unnnk7 <bgcolor=cYellow>;
+                        if (unnnk7 == 0)
+                                 {
+                            int unnnk8 <bgcolor=cGreen>;
+                            if (unnnk8 == 0)
+                                    {
+                                int unnnk9 <bgcolor=cYellow>; 
+                                int unnnk10 <bgcolor=cGreen>;
+                                if (unnnk10 == 0)
+                                        {
+                                    int unnnk11<bgcolor=cYellow>;
+                                    int unnnk12<bgcolor=cYellow>;
+                                    int unnnk13<bgcolor=cYellow>;
+                                    int unnnk14<bgcolor=cYellow>;
+                                    int unnnk15<bgcolor=cYellow>;
+                                    int unnnk16<bgcolor=cYellow>;
+                                    int unnnk17<bgcolor=cYellow>;
+                                    int unnnk18<bgcolor=cYellow>;
+                                    int unnnk19<bgcolor=cYellow>;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Child Chld  <bgcolor=cRed>;
 
-    int TextureDescriptionsCount <bgcolor=cYellow>;
-    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+        struct  LODInfo lodinf[Chld.LODsCount];
+
+        struct GeometryInfo Geometry;
+        struct Vertex Vert[Geometry.NumVertex];
+        struct Faces  Face[Geometry.NumFaces];
+        struct Col Colours[Geometry.colors];
+        int    countPage;
+        struct Texture Textures[countPage];
+
+
+        int TextureDescriptionsCount <bgcolor=cYellow>;
+        struct CutOut TextureDescriptionss[TextureDescriptionsCount];
 
     
-    ushort MaterialCount <bgcolor=cYellow>;
-    ushort u2;
-    struct Map Materials[MaterialCount]; 
+        ushort MaterialCount <bgcolor=cYellow>;
+        ushort u2;
+        struct Map Materials[MaterialCount]; 
    
-//for (i=1; i<Main.Geometry.NumVertex; i++)
-    //{
-   // FPrintf( newFile, "v  %f %f %f \n", Main.Vert[i].X/65536.0f, Main.Vert[i].Y/65536.0f, Main.Vert[i].Z/65536.0f);
 
-   // }
-    //FPrintf( newFile,"g  object\n");
-//for (j=1; j<Main.Geometry.NumFaces; j++)
-  //  {
-//Ind1_ = Main.Face[j].Ind1;
-//Ind2_ = Main.Face[j].Ind2;
-//Ind3_ = Main.Face[j].Ind3;
-  //  if (Main.Face[j].Ind1 < 0) {
-	//		Ind1_ = Main.Face[j].Ind1 + 32768;
-//		}
-		
-	//	if (Main.Face[j].Ind2 < 0) {
-	//		Ind2_ = Main.Face[j].Ind2 + 32768;
-	//	}
-		
-	//	if (Main.Face[j].Ind3 < 0 ) {
-	//		Ind3_ = Main.Face[j].Ind3 + 32768;
-	//	}
+    } Main;
+    struct {
+        Child Chld  <bgcolor=cRed>;
 
-    //Ind1_ += 1;
-   // Ind2_ += 1;
-   // Ind3_ += 1;
+        struct  LODInfo lodinf[Chld.LODsCount];
 
-   // if (Main.Face[j].MapID == 14)
-   // {
-    //FPrintf( newFile, "f  %d %d %d \n", Ind1_, Ind2_, Ind3_);
-    //}
-//}
+        struct GeometryInfo Geometry;
+        struct Vertex Vert[Geometry.NumVertex];
+        struct Faces  Face[Geometry.NumFaces];
+        struct Col Colours[Geometry.colors];
+        int    countPage;
+        struct Texture Textures[countPage];
 
-    if(Chld.Type == 0) {
-            struct {
-            char name[8];
-            } layouts[16];
-        
-            byte ZERO[128];
-        }
-} Main;
-struct {
-     Child Chld  <bgcolor=cRed>;
-
-    struct  LODInfo lodinf[Chld.LODsCount];
-
-    struct GeometryInfo Geometry;
-    struct Vertex Vert[Geometry.NumVertex];
-    struct Faces  Face[Geometry.NumFaces];
-    
-//for (i=1; i<Main.MainGeometry.NumVertex; i++)
-   // {
-   // FPrintf( newFile, "v  %f %f %f \n", MainVert[i].X/65536.0f, MainVert[i].Y/65536.0f, MainVert[i].Z/65536.0f);
-   // }
-   // FPrintf( newFile,"g  object\n");
-   // for (i=0; i<Main.MainGeometry.NumFaces; i++)
-   // {
-   // FPrintf( newFile, "f  %d %d %d \n", MainFace[i].Ind1, MainFace[i].Ind2, MainFace[i].Ind3);
-   // }
-    //if ( ((MainChld.Key & 192) != 192) && ((MainChld.Key & 98) != 98) && ((MainChld.Key & 66) != 66) ) {
-        //int u[MainChld.NaCount];
-    //}
-    //uint MainTextureFileCount;
-    struct Col Colours[Geometry.colors];
-    int    countPage;
-    struct Texture Textures[countPage];
-
-    int TextureDescriptionsCount <bgcolor=cYellow>;
-    struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+        int TextureDescriptionsCount <bgcolor=cYellow>;
+        struct CutOut TextureDescriptionss[TextureDescriptionsCount];
 
     
-    ushort MaterialCount <bgcolor=cYellow>;
-    ushort u2;
-    struct Map Materials[MaterialCount];    
+        ushort MaterialCount <bgcolor=cYellow>;
+        ushort u2;
+        struct Map Materials[MaterialCount];    
 
 
-    if(Chld.Type == 0) {
-            struct {
-            char name[8];
-            } layouts[16];
+    //if(Chld.Type == 0) {
+     //       struct {
+      //      char name[8];
+      //      } layouts[16];
         
-            byte ZERO[128];
-        }
+      //      byte ZERO[128];
+      //  }
 
 
-} SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;
-
+    } SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;
+} Models [72] <optimize=false>;

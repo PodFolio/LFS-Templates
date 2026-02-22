@@ -1,0 +1,240 @@
+typedef unsigned char byte;
+typedef signed short word;
+typedef unsigned short u_word;
+typedef unsigned int u_int;
+
+typedef struct
+{
+    int X;
+    int Y;
+    int Z;
+} Vector3;
+
+typedef struct
+{
+    word rX; // 32768 - 180 g
+    word rY;
+    word rZ;
+} Vec3R;
+
+
+struct Header // 32 bytes
+{
+    char    FileType[7];    //7
+    byte    Na;             //1 F9 or FA or FB else crash game
+};
+
+struct Child // 44
+{
+    char Z[16];
+    ubyte Key<format=hex,comment = "E3 - Mirror only, E2 - Mirror fix possible">;
+    ubyte Key0;
+    ubyte Key1<comment = "00 - main mesh, 01 - calip, 02 - wheel, 03 - normal, 05 - not hide in F mode, 06 - rear df point, 07 - front df point, 08 - middle df point, 0A - mirror",bgcolor=0x933EC5>;
+    ubyte Key2<comment = "01/03 - Mirror fix works, 02 - Mirror fix not work">;
+    ubyte Some1Count;
+    ubyte unk;
+    ushort NaCount;
+};
+
+struct Head
+{
+byte Signature;
+ byte un2;
+ WORD sp0;
+ float un4;
+ float un5;
+ float scale;
+ float un6;
+ float un7;
+ float un8;
+ float un9;
+ byte un10;
+ byte collision;
+ WORD un11;
+};
+
+struct Some1{
+    u_word Zero;
+    u_word SomeRotate;
+};
+
+
+struct GeometryInfo{
+    word    NumVertex;      //2
+    word    NumFaces;       //2
+    uint    SubObjectsCount;    //number of child meshes
+    Vec3R   rotate;
+    word    Zero;
+    Vector3 pos;            // position
+    word    One;            //2
+    word    NumObjects;    //2
+};
+
+
+struct ObjectName // 16 byte
+{
+    byte R; // Red
+    byte G; // Green
+    byte B; // Blue
+    byte X; // N/A
+    char Name[10];
+    word MaterialID;
+};
+
+struct Vertex // size = 16 byte
+{
+    int id_material;
+    int X; // float = 4 byte
+    int Y;
+    int Z;
+};
+
+struct Faces // 12 bytes
+{
+    byte MirrorState<comment = " MIRROR_OFF = 0, MIRROR_ON = 1, OLOLO_2 = 2, GLASS = 4, OLOLO_8 = 8, MIRROR_FIX = 16">;
+    byte CarGroupID; // Car Object Group
+    byte ObjID;
+    byte NCLevel<comment = " 0: zero, 1: low, 2:medium, 3:high">;
+    byte Colision;
+    byte Group; // ???????????
+    u_word Ind1;
+    u_word Ind2;
+    u_word Ind3;
+};
+
+enum MIRROR_STATE
+{
+    MIRROR_OFF = 0,
+    MIRROR_ON = 1,
+    OLOLO_2 = 2,
+    GLASS = 4,
+    OLOLO_8 = 8,
+    MIRROR_FIX = 16
+};
+
+struct Texture // 20 byte
+{
+    int  Flag<comment = "1 - locate in /skins_dds/CAR_DEFAULT.dds">;
+    char Name[16]<comment = "filename in /data/dds texture name">;
+};
+
+struct TextureDescriptions // 24 byte
+{
+    char    Name[16]; //16
+    byte    skyReflection<comment = "bit 0 : sky reflection">;
+    byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
+    byte    TextureId<comment = "world texture index">;
+    byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
+    byte    UTile;          // 64 = 1.0
+    byte    VTile;          // 64 = 1.0
+    byte    Uoffset;           // 64 = 1.0
+    byte    Voffset;           // 64 = 1.0
+
+};
+
+struct Material // 44 byte
+{
+    char Name[16]; //16
+    byte Flag;      //4
+    byte Flag;      //4
+    byte Flag;      //4
+    byte Flag;      //4
+
+    int RightBoundUV<comment = "65535 = 1.0 Metre">;
+
+    int LeftBoundUV<comment = "65535 = 1.0 Metre">;
+
+    int DownBoundUV<comment = "65535 = 1.0 Metre">;
+
+    int UpperBoundUV<comment = "65535 = 1.0 Metre">;
+
+    int RTDI<comment = "RightSide Texture Descriptions ID">;
+    int LTDI<comment = "LeftSide  Texture Descriptions ID">;
+};
+typedef struct // STRUCT2
+	{
+	float diametr <>;
+	float z <comment="height in meters as float of center">;
+} STRUCT2;
+
+typedef struct // STRUCT3
+	{
+	DWORD sp0;
+	DWORD sp1;
+} STRUCT3;
+
+
+//Header head;
+
+struct {
+   
+
+  struct {
+    Head MainHead;
+    Child MainChld  <bgcolor=cRed>;
+    if (MainChld.Key == 8 || MainChld.Key == 10)
+        {
+
+            DWORD NumSp11<bgcolor = cYellow>;
+			STRUCT2 Struct2[NumSp11];
+			DWORD NumSp2<bgcolor = cYellow>;
+			STRUCT3 Struct3[NumSp2];
+            
+        }
+        else
+    {
+    struct Some1 MainSomes[MainChld.Some1Count];
+    struct GeometryInfo MainGeometry;
+    struct ObjectName MainObjectNames[MainGeometry.NumObjects];
+    struct Vertex MainVert[MainGeometry.NumVertex];
+    struct Faces  MainFace[MainGeometry.NumFaces];
+
+    uint MainTextureFileCount;
+    struct Texture MainTextures[MainTextureFileCount];
+    
+    int MainTextureDescriptionsCount <bgcolor=cYellow>;
+    struct TextureDescriptions MainTextureDescriptionss[MainTextureDescriptionsCount];
+    
+    int MainMaterialCount <bgcolor=cYellow>;
+    struct Material MainMaterials[MainMaterialCount];
+
+    if (MainGeometry.SubObjectsCount > 0) {
+  
+        struct {
+            char Text[8];
+        } MainFaceGroup[32];
+    }
+    if (MainGeometry.SubObjectsCount == 0)
+    {
+    ubyte sp4[144];
+    ubyte sp5[112];
+    }
+    }
+    
+ } Main;
+if (Main.MainChld.Key != 8)
+    {
+    if (Main.MainChld.Key != 10)
+    {
+ struct {
+    Child Chld  <bgcolor=cRed>;
+    struct Some1 Somes[Chld.Some1Count];
+    struct GeometryInfo Geometry;
+    struct ObjectName ObjectNames[Geometry.NumObjects];
+    struct Vertex Vert[Geometry.NumVertex];
+    struct Faces  Face[Geometry.NumFaces];
+
+    uint TextureFileCount;
+    struct Texture Textures[TextureFileCount];
+    
+    int TextureDescriptionsCount <bgcolor=cYellow>;
+    struct TextureDescriptions TextureDescriptionss[TextureDescriptionsCount];
+    
+    int MaterialCount <bgcolor=cYellow>;
+    struct Material Materials[MaterialCount];
+    
+    
+    } SubObject [Main.MainGeometry.SubObjectsCount] <optimize=false>;
+    
+}}
+}Object [112]< optimize=false>;

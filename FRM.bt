@@ -2,7 +2,7 @@
 //--- 010 Editor v10.0.1 Binary Template
 //
 //      File: 
-//   Authors: 
+//   Authors: Draggo
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -10,23 +10,46 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
+enum <byte> dierctions  {
+    across = 0,
+    along = 1,
+    cross = 3
+};
+enum <byte> pointtype  {
+    vertex = 0,
+    lowerpivot = 1,
+    upperpivot = 2,
+    thrustbearing = 3
+};
+enum <byte> visibility  {
+    notvisible = 0,
+    visible = 1
+};
 
-struct UN
+
+struct POINTS
 {
         hfloat ann[6];
         float ann1;
-        float ann1;
+        byte ann1;
+        byte ann1;
+        pointtype type;
+        byte ann1;
 };
-struct UN2
+struct TUBE
 {
         byte un1;
         byte un2;
-        byte un3;
-        byte un4;
+        byte direction;
+        byte direction2;
         float TUBEmass;
-        int un6;
+        visibility type;
+        byte un6;
+        byte un6;
+        byte un6;
        
 };
+ 
     
 
 struct FILE{
@@ -38,8 +61,8 @@ struct FILE{
 
     } header;
     int pointCount;
-    UN unn[pointCount];
-    int tCount;
-    UN2 unn2[tCount];
+    POINTS unn[pointCount];
+    int tubesCount;
+    TUBE unn2[tubesCount];
 
 }file;

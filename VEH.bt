@@ -72,7 +72,7 @@ string stoR (float &i) {
 }
 string stoR2 (float &i) {
     string hun;
-    SPrintf(hun, "%0.2f =RimWidth/0.0245",((float)i /0.0254f));
+    SPrintf(hun, "%0.2f =RimWidth/0.0254",((float)i /0.0254f));
     return hun;
 }
 string tys (float &i) {
@@ -163,29 +163,8 @@ enum SUB_OBJ_STATE {
     ALWAYS = 224
 };
 
-enum <byte> ConectTo {
-    Lights = 0,
-    Ignition = 1,
-    RearFog = 2,
-    FtontFog = 3,
-    LeftInd = 4,
-    RightInd = 5,
-    Extra = 6,
-    Horn = 7,
-    Siren = 8
-};
-
-enum <byte> RotationAxis {
-    Roll = 0,
-    LocalX = 1,
-    Pitch = 2,
-    LocalZ = 3,
-    Heading = 4
-};
-
 struct LODInfo {
-    RotationAxis  Rotation_Axis;
-    ConectTo Connect_To;
+    ushort  unk3;
     ushort  LODdistance;
 };
 
@@ -211,7 +190,9 @@ struct ObjectName // 16 byte
 
 struct Vertex // size = 16 byte
 {
-    int Flag<comment = "0=OFF, 1=MIRROR, 2=FIX_CENTER, 16=REFERENCED, 64=DARK, 128=VERY_DARK, 192=EXT_DARK">;
+    byte Flag<comment = "0=OFF, 1=MIRROR, 2=FIX_CENTER, 16=REFERENCED, 64=DARK, 128=VERY_DARK, 192=EXT_DARK">;
+    byte Bone;
+    byte non[2];
     int X<read=i2f>; // 65536 = 1m
     int Y<read=i2f>; // 65536 = 1m
     int Z<read=i2f>; // 65536 = 1m
@@ -750,6 +731,10 @@ struct CarData
     {
     ObjEngine eng;
     }
+    else if (Transmission== 0)
+    {
+    ObjEngine eng;
+    }
     else
     {
     Engine eng;
@@ -973,7 +958,6 @@ struct {
     byte na1;
     short na3;
     struct Surface srf[SurfaceCount];
-
 
 } Rim[1] <optimize=false>;
 Areodynamics aero;
