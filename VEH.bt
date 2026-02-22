@@ -157,17 +157,54 @@ struct RimChild // 44
     byte sp;
 };
 
-enum SUB_OBJ_STATE {
+enum <byte> SUB_OBJ_STATE {
     MIRRORED = 1,
     CUSTOM_COLOR = 2,
     ALWAYS = 224
 };
 
-struct LODInfo {
-    ushort  unk3;
-    ushort  LODdistance;
+enum <byte> ROTATIONAXIS{
+    roll = 0,
+    localX = 1,
+    pitch = 2,
+    localZ = 3,
+    heading = 4
+};
+enum <byte> TRIGGER{
+    lights = 0,
+    ignition = 1,
+    rear_fog = 2,
+    front_fog = 3,
+    left_ind = 4,
+    right_ind = 5,
+    extra = 6,
+    horn = 7,
+    siren = 8
 };
 
+struct LODInfo {
+    ROTATIONAXIS rott;
+    TRIGGER connecto;
+    ushort  LODdistance;
+};
+enum <byte> MIRROR_STATE
+{
+    MIRROR_OFF = 0,
+    MIRROR_ON = 1,
+    OLOLO_2 = 2,
+    GLASS = 4,
+    OLOLO_8 = 8,
+    REFERENCED = 16,
+    DOUBLE_SIDE = 32
+
+};
+enum <byte> LOD
+{
+    lod0 = 0,
+    lod2_shadow = 1,
+    lod3_collision = 2
+
+};
 
 struct GeometryInfo{
     word    NumVertex;      //2
@@ -201,27 +238,18 @@ struct Vertex // size = 16 byte
 
 struct Faces // 12 bytes
 {
-    byte MirrorState<comment = " MIRROR_OFF = 0, MIRROR_ON = 1, OLOLO_2 = 2, GLASS = 4, OLOLO_8 = 8, MIRROR_FIX = 16,DOUBLE_SIDE = 32">;
+    MIRROR_STATE MirrorState;
     byte LayoutID; // Car Layout ID
     byte MapID;
     byte NCLevel;
-    byte LodID<comment = "Colision">;
+    LOD LodID;
     byte GroupID; // 
     u_word Ind1;
     u_word Ind2;
     u_word Ind3;
 };
 
-enum MIRROR_STATE
-{
-    MIRROR_OFF = 0,
-    MIRROR_ON = 1,
-    OLOLO_2 = 2,
-    GLASS = 4,
-    OLOLO_8 = 8,
-    MIRROR_FIX = 16,
-    DOUBLE_SIDE = 32
-};
+
 
 struct Texture // 20 byte
 {
