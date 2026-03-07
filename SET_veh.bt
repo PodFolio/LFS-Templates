@@ -91,7 +91,7 @@ struct SUSPENSION {
     float Bump_Damping <comment="N/mm">;            
     float Rebound_Damping <comment="N/mm">;         
     float Anti_Roll_Bar <comment="Stiffness (N/mm)">; 
-    float Reserved6;                      
+    float Handbrake_Max_Per_Wheel<comment="N/mm">;                      
     byte Toe <comment="0=-0.9deg, 9=0deg, 18=0.9deg">; 
     byte Caster <comment=ten>;          
     TyreGripType Tyre_Type; 

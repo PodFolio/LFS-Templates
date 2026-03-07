@@ -85,6 +85,11 @@ string red (float &i) {
     SPrintf(line, "%0.2f",((float)i *9.5493f));
     return line;
 }
+string inca (float &i) {
+    string line;
+    SPrintf(line, "%0.1f",(((float)i *5.729578778556937f))*10);
+    return line;
+}
 
 typedef struct
 {
@@ -686,13 +691,24 @@ struct Wh
     float som13;
 };
 
+enum <byte> SType
+{
+    Rigid = 0, 
+    Linear = 1,
+    FrontFork = 2,
+    McPhersonStrut = 3,
+    DoubleWishbone = 4,
+    TrailingArm = 5
+
+};
+
 struct Wheels
 {
     float Width<comment = sto2>;
     float Ratio<comment = sto>;
     float RimDiameter<comment=stoR>;
     float RimWidth<comment=stoR2>;
-    byte SuspensionType<comment = "0:Rigid, 1:Linear, 2:Front Fork, 3:McPherson Strut, 4:DoubleWishbone, 5:TrailingArm">;
+    SType SuspensionType;
     byte RimExtraWidth;
     byte RimLip;
     byte BlackInnerRim;
@@ -703,12 +719,12 @@ struct Wheels
     byte DiscRadius;
     byte DiscOffset;
     float Indication;
-    float so83;
+    float IncludedAngle<comment=inca>;
     float Offset;
     float Track;
     float so13;
-    float so14;
-    float so15;
+    float LowerArmLenght;
+    float UpperArmLenght;
     float HalfUpright;
 
 };
