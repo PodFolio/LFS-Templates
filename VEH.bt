@@ -1,8 +1,8 @@
 //------------------------------------------------
 //--- 010 Editor v7.0.2 Binary Template
 //
-//      File: Live For Speed VOB
-//   Authors: turbosnail
+//      File: Live For Speed VEH
+//   Authors: Draggo & turbosnail
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -465,6 +465,7 @@ int extra<format=hex>;
 int extra2<format=hex>;
 int extra3<format=hex>;
 };
+
 struct Configs
 {
     char name[12];
@@ -806,9 +807,13 @@ struct CarData
     float BackSeatR;
     float BackSeatF;
     float BackSeatU;
-    float FuelTankR;
-    float FuelTankF;
-    float FuelTankU;
+    if (som3_1 != 6)
+    {
+        float FuelTankR;
+        float FuelTankF;
+        float FuelTankU;
+    }
+    
     float Battery12Vr;
     float Battery12Vf;
     float Battery12Vu;
@@ -819,15 +824,27 @@ struct CarData
     float SpareWhellPinch<comment = fangle>;
     float sssome1<comment = fangle>;
     float sssome2<comment = fangle>;
+
     float SteeringWheelPitch<comment = fangle>;
     float SteeringWheelTurn<comment = fangle>;
     float SteeringWheelHeading<comment = fangle>;
     float sssome3<comment = fangle>;
     float TrialReductionH;
+    if (som3_1 != 6)
+    { 
     float sssome4<comment = fangle>;
     float sssome5<comment = fangle>;
     float sssome6<comment = fangle>;
     float sssome7<comment = fangle>;
+    
+    }
+    if (Type== 7)
+    {
+    float sssome7<comment = fangle>;
+    }
+
+    
+
     /*
     if ((some2_ == 192 && some3_ == 4) || (some2_ == 192 && some3_ == 13) || (some2_ == 0 && required != 135) )
     {
@@ -878,7 +895,14 @@ struct CarData
     //}
     char cartype[8];
     char EngineSoundFile[16];
-    float som_8[4];
+    if (som3_1 != 6)
+    {
+        float som_8[4];
+    }
+    else
+    {
+        float som_8;
+    }
     LightCol Lights;
     char FramName[4];
     Frame frm;
