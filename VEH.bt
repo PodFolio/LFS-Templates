@@ -838,7 +838,7 @@ struct CarData
     float sssome7<comment = fangle>;
     
     }
-    if (Type== 7)
+    if (Type== 7 && som3_1 == 6)
     {
     float sssome7<comment = fangle>;
     }
