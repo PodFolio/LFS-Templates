@@ -78,9 +78,28 @@ enum SUB_OBJ_STATE {
     CUSTOM_COLOR = 2,
     ALWAYS = 224
 };
+enum <byte> ROTATIONAXIS{
+    roll = 0,
+    localX = 1,
+    pitch = 2,
+    localZ = 3,
+    heading = 4
+};
+enum <byte> TRIGGER{
+    lights = 0,
+    ignition = 1,
+    rear_fog = 2,
+    front_fog = 3,
+    left_ind = 4,
+    right_ind = 5,
+    extra = 6,
+    horn = 7,
+    siren = 8
+};
 
 struct LODInfo {
-    ushort  unk3;
+    ROTATIONAXIS rott;
+    TRIGGER connecto;
     ushort  LODdistance;
 };
 

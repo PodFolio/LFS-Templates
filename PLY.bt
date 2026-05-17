@@ -1,0 +1,79 @@
+//------------------------------------------------
+//--- 010 Editor v10.0.1 Binary Template
+//
+//      File: 
+//   Authors: Draggo / Cyk
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+enum <byte> DriverPosition {
+    right = 0,
+    left = 1
+};
+enum <byte> SpeedDisplay {
+    mph = 0,
+    kmph = 1
+};
+enum <byte> PressureDisplay {
+    bar = 0,
+    psi = 1
+};
+enum <byte> Choice {
+    no = 0,
+    yes = 1
+};
+enum <byte> Steering {
+    rigid = 0,
+    flexible = 1
+};
+
+struct Header
+{
+    char head[6] <bgcolor=0x67D8D8>;
+    byte empty;
+    byte version <bgcolor=0x9F9FFE ,format=hex>;
+
+};
+
+
+struct Skins
+{
+    int color<format=hex>;
+    char SkinName[16];
+    int zero[8];
+
+};
+
+
+Header head;
+
+int nk2;
+byte player_model;
+byte nkk[3];
+byte nk3;
+DriverPosition position;
+byte nk3;
+Choice AutoGearShift;
+byte nk7;
+Choice AutoClutch;
+
+byte nk8;
+byte nk8;
+byte nk8;
+byte nk8;
+Steering style;
+byte nk8;
+Choice BreakHelp;
+byte nk8;
+SpeedDisplay type;
+PressureDisplay unit;
+int unk[64];
+int default3;
+char HelmetSkin[16];
+char NumberPlate[8];
+int cars;
+struct Skins Names[cars]; 
