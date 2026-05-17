@@ -176,19 +176,6 @@ struct Texture // 20 byte
     char Name[20]<comment = "filename in /data/dds texture name">;
 };
 
-//struct TextureDescriptions // 24 byte
-//{
-//    char    Name[16]; //16
- //   byte    skyReflection<comment = "bit 0 : sky reflection">;
- //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
- //   byte    TextureId<comment = "world texture index">;
- //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
- //   byte    UTile;          // 64 = 1.0
- //   byte    VTile;          // 64 = 1.0
-  //  byte    Uoffset;           // 64 = 1.0
- //   byte    Voffset;           // 64 = 1.0
-
-//};
 
 struct CutOut
 {
@@ -242,11 +229,7 @@ struct Map
 };
 
 
-//local u_word Ind1_ = 0;
-//local u_word Ind2_ = 0;
-//local u_word Ind3_ = 0;
-//local int i = 1; 
-//local int j = 1;
+
 
 
 Header head;
@@ -270,38 +253,6 @@ struct {
     ushort u2;
     struct Map Materials[MaterialCount]; 
    
-//for (i=1; i<Main.Geometry.NumVertex; i++)
-    //{
-   // FPrintf( newFile, "v  %f %f %f \n", Main.Vert[i].X/65536.0f, Main.Vert[i].Y/65536.0f, Main.Vert[i].Z/65536.0f);
-
-   // }
-    //FPrintf( newFile,"g  object\n");
-//for (j=1; j<Main.Geometry.NumFaces; j++)
-  //  {
-//Ind1_ = Main.Face[j].Ind1;
-//Ind2_ = Main.Face[j].Ind2;
-//Ind3_ = Main.Face[j].Ind3;
-  //  if (Main.Face[j].Ind1 < 0) {
-	//		Ind1_ = Main.Face[j].Ind1 + 32768;
-//		}
-		
-	//	if (Main.Face[j].Ind2 < 0) {
-	//		Ind2_ = Main.Face[j].Ind2 + 32768;
-	//	}
-		
-	//	if (Main.Face[j].Ind3 < 0 ) {
-	//		Ind3_ = Main.Face[j].Ind3 + 32768;
-	//	}
-
-    //Ind1_ += 1;
-   // Ind2_ += 1;
-   // Ind3_ += 1;
-
-   // if (Main.Face[j].MapID == 14)
-   // {
-    //FPrintf( newFile, "f  %d %d %d \n", Ind1_, Ind2_, Ind3_);
-    //}
-//}
 
     if(Chld.Type == 0) {
             struct {
@@ -320,19 +271,6 @@ struct {
     struct Vertex Vert[Geometry.NumVertex];
     struct Faces  Face[Geometry.NumFaces];
     
-//for (i=1; i<Main.MainGeometry.NumVertex; i++)
-   // {
-   // FPrintf( newFile, "v  %f %f %f \n", MainVert[i].X/65536.0f, MainVert[i].Y/65536.0f, MainVert[i].Z/65536.0f);
-   // }
-   // FPrintf( newFile,"g  object\n");
-   // for (i=0; i<Main.MainGeometry.NumFaces; i++)
-   // {
-   // FPrintf( newFile, "f  %d %d %d \n", MainFace[i].Ind1, MainFace[i].Ind2, MainFace[i].Ind3);
-   // }
-    //if ( ((MainChld.Key & 192) != 192) && ((MainChld.Key & 98) != 98) && ((MainChld.Key & 66) != 66) ) {
-        //int u[MainChld.NaCount];
-    //}
-    //uint MainTextureFileCount;
     struct Col Colours[Geometry.colors];
     int    countPage;
     struct Texture Textures[countPage];
