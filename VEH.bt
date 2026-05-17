@@ -989,8 +989,9 @@ struct {
 
 
 } SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;
+
 struct {
-    byte   SpokeCount<bgcolor=cRed>;    
+      byte   SpokeCount<bgcolor=cRed>;  
     byte    Na[3];
     RimChild Chld  <bgcolor=cRed>;
 
@@ -1011,10 +1012,35 @@ struct {
     short MaterialCount <bgcolor=cYellow>;
     short u2;
     struct Map Materials[MaterialCount];
-
-
-
 } Spoke[1] <optimize=false>;
+
+if (data.required == 131|| data.required == 130)
+{
+        
+        struct {
+        RimChild Chld  <bgcolor=cRed>;
+
+        struct  LODInfo slodinf[Chld.LODsCount];
+
+        struct GeometryInfo Geometry;
+
+         struct Vertex Vert[Geometry.NumVertex];
+        struct Faces  Face[Geometry.NumFaces];
+        int    countPage;
+         struct Texture Textures[countPage];
+    
+        int TextureDescriptionsCount <bgcolor=cYellow>;
+        struct CutOut TextureDescriptionss[TextureDescriptionsCount];
+
+
+    
+        short MaterialCount <bgcolor=cYellow>;
+        short u2;
+        struct Map Materials[MaterialCount];
+        }Spoke2[1] <optimize=false>;
+
+}
+
 struct {
     byte Points<bgcolor=cRed>;
     byte na[3];
@@ -1028,4 +1054,20 @@ struct {
     struct Surface srf[SurfaceCount];
 
 } Rim[1] <optimize=false>;
+if (data.required == 131 || data.required == 130)
+{
+struct {
+    byte Points<bgcolor=cRed>;
+    byte na[3];
+    struct RimPoints RimPt[Points];
+    short na2;
+    short ColourCount<bgcolor=cRed>;
+    struct RimColours Color[ColourCount]<bgcolor=cYellow>;
+    byte SurfaceCount<bgcolor=cRed>;
+    byte na1;
+    short na3;
+    struct Surface srf[SurfaceCount];
+
+} Rim2[1] <optimize=false>;
+}
 Areodynamics aero;
