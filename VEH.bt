@@ -2,7 +2,7 @@
 //--- 010 Editor v7.0.2 Binary Template
 //
 //      File: Live For Speed VEH
-//   Authors: Draggo & turbosnail
+//   Authors: Draggo & Ganjaman & turbosnail
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -262,19 +262,6 @@ struct Texture // 20 byte
     char Name[20]<comment = "filename in /data/dds texture name">;
 };
 
-//struct TextureDescriptions // 24 byte
-//{
-//    char    Name[16]; //16
- //   byte    skyReflection<comment = "bit 0 : sky reflection">;
- //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
- //   byte    TextureId<comment = "world texture index">;
- //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
- //   byte    UTile;          // 64 = 1.0
- //   byte    VTile;          // 64 = 1.0
-  //  byte    Uoffset;           // 64 = 1.0
- //   byte    Voffset;           // 64 = 1.0
-
-//};
 
 struct CutOut
 {
@@ -348,6 +335,9 @@ struct Map
     int Height<read=i2f>;
     ushort CutOutId;
     ushort CutOutIdOpposite;
+};
+
+
 
 struct TSTB {
     byte turbo:1;
@@ -363,7 +353,7 @@ enum <byte> EngineLayout  {
     V = 2
 };
     
-};
+
 struct Engine
 {
     float TotalMass;
@@ -392,7 +382,7 @@ struct Engine
 };
 struct eEngine
 {
-    float someES1;
+    float TotalMass;
     float Power;
     float Torque;
     short PowerRPM;
@@ -740,14 +730,49 @@ struct Areodynamics
     };
     Wings wing[4];
 };
+struct CCW {
+    byte concealedDriver : 1;
+    byte lockedDriveSide : 1;
+    byte spareWheelRight : 1;
+    byte spareWheelVisible : 1;
+    byte rearWheelSizeMatchFront : 1;
+    byte spareWheelLeft : 1;
+    byte transverseEngine : 1;
+    byte engineClockWise : 1;
+};
+struct Passengers {
+    byte frontPassenger:1;
+    byte unk1:1;
+    byte hasRearPassengers:1;
+    byte unk5:5;
+};
+struct sFlags {
+    byte unk2:2;
+    byte shiftLight:1;
+    byte SpecifyFuelTank:1;
+    byte unk11:1;
+    byte openDiffOnly:1;
+    byte SingelSettingDiff:1;
+    byte IncludeBattery:1;
+};
+struct sFlags2 {
+    byte includeSeatMasses:1;
+    byte SpareWheelFront:1;
+    byte RearWheelStyleDifferent:1;
+    byte reflectWheels:1;
+    byte liveAdjustBrakeBalance:1;
+    byte LiveAdjustAntiRoll:1;
+    byte PitLimiter:1;
+    byte SpareWheelDrawHub:1;
+};
 
 
 struct CarData
 {
-    byte CCW<comment = "64:??, 66:Bike, 82: ConcealedWheels=NO ,114: ConcealedWheels=YES,">;
-    byte some2_;
-    byte some3_;
-    byte required;
+    CCW ccw;
+    Passengers some2_;
+    sFlags some3_;
+    sFlags2 required;
     byte some2;
     byte some3;
     byte some4;
@@ -763,7 +788,7 @@ struct CarData
     byte Transmission<comment = "0-No Drive, 1-RWD, 2-FWD, 3-AWD,">;
     byte Electric<comment = "its not it. 0, 1-Electric, 2,3,4,5, 6-Bike?">;
     byte non[2];
-    char SkinID[4];
+    int SkinID<format=hex>;
     if (som3_1 == 6)
     {
         eEngine eng;
@@ -784,15 +809,9 @@ struct CarData
     {
     Engine eng;
     }
-    //if (Type == 0)
-    //{
-    //Setups defaultSetups[1];
-    //}
-    //else
-    //{
+
     int setCount;
     Setups defaultSetups[setCount];
-    //}
     int colCount;
     Colours defaultColours[colCount];
     int defGtrch;
@@ -843,56 +862,16 @@ struct CarData
     float sssome7<comment = fangle>;
     }
 
-    
-
-    /*
-    if ((some2_ == 192 && some3_ == 4) || (some2_ == 192 && some3_ == 13) || (some2_ == 0 && required != 135) )
-    {
-
-        float idk_2_[2];        
-    }
-    else if ((some2_ == 192 && some3_ > 13) || (some2_ == 0 && required == 247 && un2 == 4))
-    {
-
-        
-    }
-    else if (un2 == 6 && some2_ != 5 && some3_ != 8)
-    {
-
-        float idk2[1];
-    }
-    else if (un2 == 4  || Electric == 6)
-    {
-
-        float idk__2[5];
-    }
-    else if (som3_1 == 6 || some2_ == 5 || some3_ == 8)
-    {
-        
-        float idk___2[4];
-    }
-    else
-    {
-
-        float idk____2[1];
-    }
-    */
+   
     byte dasztype;
     byte daszsize;
     byte daszunk[2];
     byte daszboard[data.daszsize];
     //Dashboard dash;
-    int som5;
-    //if (Electric == 0 && som3_1 == 6)
-    //{
-    //}
-    //else
-    //{
-    
+    int som5; 
     int som6;
     int NrForwardGears;
     float ReverseGearRatio;
-    //}
     char cartype[8];
     char EngineSoundFile[16];
     if (som3_1 != 6)
@@ -906,7 +885,7 @@ struct CarData
     LightCol Lights;
     char FramName[4];
     Frame frm;
-    if (some2_ == 0 && required == 247  && un2 == 4)
+    if (some2_.frontPassenger == 0 && required.reflectWheels == 0  && un2 == 4)
     {
         int whlCount;
         Wh wh[whlCount];
@@ -1013,8 +992,7 @@ struct {
     short u2;
     struct Map Materials[MaterialCount];
 } Spoke[1] <optimize=false>;
-
-if (data.required == 131|| data.required == 130)
+if (data.required.RearWheelStyleDifferent == 0)
 {
         
         struct {
@@ -1054,7 +1032,7 @@ struct {
     struct Surface srf[SurfaceCount];
 
 } Rim[1] <optimize=false>;
-if (data.required == 131 || data.required == 130)
+if (data.required.RearWheelStyleDifferent == 0 )
 {
 struct {
     byte Points<bgcolor=cRed>;
