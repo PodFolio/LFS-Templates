@@ -1,8 +1,8 @@
 //------------------------------------------------
 //--- 010 Editor v10.0.1 Binary Template
 //
-//      File: 
-//   Authors: 
+//      File: Live For Speed ALL
+//   Authors: Draggo
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -10,9 +10,9 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-struct Header // 32 bytes
+struct Header
 {
-    char    FileType[7];    //7
+    char    FileType[7];    
     byte    version; 
 
 };
