@@ -2,7 +2,7 @@
 //--- 010 Editor v7.0.2 Binary Template
 //
 //      File: Live For Speed VOB
-//   Authors: turbosnail
+//   Authors: Draggo
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -10,49 +10,6 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-//local int newFile = FileNew();
-typedef unsigned char byte;
-typedef signed short word;
-typedef unsigned short u_word;
-typedef unsigned int u_int;
-//local int i; 
-
-typedef struct
-{
-    int X<read=i2f>;
-    int Y<read=i2f>;
-    int Z<read=i2f>;
-} Vector3;
-
-typedef struct
-{
-    word rX; // 32768 - 180 g
-    word rY;
-    word rZ;
-} Vec3R;
-
-string i2f (int &i) {
-    string str;
-    SPrintf(str, "%3.3f",((float)i / 65536.0f));
-    return str;
-}
-string rotate (uint &i) {
-    string str;
-    uint h = i & 2047;
-    if(h > 720)
-        h -= 2048;
-
-    uint p = (i >> 11) & 2047;
-    if(p > 360)
-        p -= 1024;
-
-    uint r = (i >> 21);
-    if(r > 720)
-        r -= 2048;
-
-    SPrintf(str, "h:%3.2f p:%3.2f r:%3.2f", (float)h, (float)p/4.0f, (float)r/4.0f);
-    return str;
-}
 
 struct Header // 32 bytes
 {
