@@ -1,8 +1,8 @@
 //------------------------------------------------
 //--- 010 Editor v7.0.2 Binary Template
 //
-//      File: Live For Speed VOB
-//   Authors: turbosnail
+//      File: HMN (8B) Live For Speed
+//   Authors: Draggo (Based on turbosnail SRE template)
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -10,12 +10,11 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-//local int newFile = FileNew();
 typedef unsigned char byte;
 typedef signed short word;
 typedef unsigned short u_word;
 typedef unsigned int u_int;
-//local int i; 
+
 
 typedef struct
 {
@@ -148,19 +147,6 @@ struct Texture // 20 byte
     char Name[20]<comment = "filename in /data/dds texture name">;
 };
 
-//struct TextureDescriptions // 24 byte
-//{
-//    char    Name[16]; //16
- //   byte    skyReflection<comment = "bit 0 : sky reflection">;
- //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
- //   byte    TextureId<comment = "world texture index">;
- //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
- //   byte    UTile;          // 64 = 1.0
- //   byte    VTile;          // 64 = 1.0
-  //  byte    Uoffset;           // 64 = 1.0
- //   byte    Voffset;           // 64 = 1.0
-
-//};
 
 struct CutOut
 {
@@ -218,7 +204,7 @@ struct Headr // 32 bytes
         byte unkn2 <bgcolor=0x9FAFFF ,format=hex>;
         byte empty2[3];
         int empty3;
-        float unk3;
+        float size;
 };
 struct Ani // 44 byte
 {
@@ -242,7 +228,6 @@ struct Some
 
 };
 
-
 Header head;
 struct {
 Headr he;
@@ -254,19 +239,6 @@ Headr he;
     struct Vertex Vert[Geometry.NumVertex];
     struct Faces  Face[Geometry.NumFaces];
     
-//for (i=1; i<Main.MainGeometry.NumVertex; i++)
-   // {
-   // FPrintf( newFile, "v  %f %f %f \n", MainVert[i].X/65536.0f, MainVert[i].Y/65536.0f, MainVert[i].Z/65536.0f);
-    //}
-    //FPrintf( newFile,"g  object\n");
-   // for (i=0; i<Main.MainGeometry.NumFaces; i++)
-    //{
-   // FPrintf( newFile, "f  %d %d %d \n", MainFace[i].Ind1, MainFace[i].Ind2, MainFace[i].Ind3);
-   // }
-    //if ( ((MainChld.Key & 192) != 192) && ((MainChld.Key & 98) != 98) && ((MainChld.Key & 66) != 66) ) {
-        //int u[MainChld.NaCount];
-    //}
-    //uint MainTextureFileCount;
     int    countPage;
     struct Texture Textures[countPage];
 

@@ -12,6 +12,7 @@
 //------------------------------------------------
 typedef signed short word;
 typedef unsigned int time;
+
 struct FILE{
     struct HEADER {
         char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
@@ -52,7 +53,7 @@ int unk1;
 int unk2;
 char local_driver_skin_name[20]<bgcolor=0xBDC703>;
 char local_driver_helmet_skin_name[20]<bgcolor=0xBDC703>;
-if (header.SPRversion == 20)
+if (header.SPRversion == 20 || header.SPRversion == 21 || header.SPRversion == 22)
 {
 int unk3[279];
 }
@@ -70,16 +71,22 @@ char driver_name[24]<bgcolor=0xBDC703>;// including colours
 char driver_number_plate[8]<bgcolor=0xBDC703>;
 byte unk5[4];
 byte unk6[4];
+if (header.SPRversion == 22)
+{
+int unk9;
+}
+
 char driver_helmet_skin_name[16]<bgcolor=0xBDC703>;
 int unk7;
 char driver_car_name[32]<bgcolor=0xBDC703>;
 int car_setup[30];
 int car_colours[12];
 byte unk8[4];
+
 struct SOME {
         byte u1[4];
         short x;
         short y;
 
-    } some[ replay_length ];
+    } some[ flags+6 ];
 } file;

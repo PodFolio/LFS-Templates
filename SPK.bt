@@ -1,8 +1,8 @@
 //------------------------------------------------
 //--- 010 Editor v7.0.2 Binary Template
 //
-//      File: 
-//   Authors: 
+//      File: SPK Live For Speed
+//   Authors: Draggo (Based on turbosnail SRE template)
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -80,17 +80,6 @@ struct Some1{
 };
 
 
-//struct GeometryInfo{
- //   word    NumVertex;      //2
- //   word    NumFaces;       //2
- //   uint    CountNotice;
- //   Vec3R   rotate;
- //   word    Zero;
- //   Vector3 pos;            // position
-  //  word    One;            //2
- //   word    NumObjects;    //2
-//};
-
 struct GeometryInfo{
     word    NumVertex;      //2
     word    NumFaces;       //2
@@ -110,7 +99,7 @@ struct ObjectName // 16 byte
     byte G; // Green
     byte B; // Blue
     byte X; // N/A
-    //word MaterialID;
+
 };
 
 struct Vertex // size = 16 byte
@@ -150,19 +139,7 @@ struct Texture // 20 byte
     char Name[20]<comment = "filename in /data/dds texture name">;
 };
 
-//struct TextureDescriptions // 24 byte
-//{
-//    char    Name[16]; //16
- //   byte    skyReflection;   // bit 0 : sky reflection
- //   byte    Rotate;          // bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip
- //   byte    TextureId;       // world texture index
- //   byte    Sp1;             // 64 = 1.0
- //   byte    UTile;          // 64 = 1.0
- //   byte    VTile;          // 64 = 1.0
- //   byte    Uoffset;           // 64 = 1.0
- //   byte    Voffset;           // 64 = 1.0
 
-//};
 struct CutOut
 {
     char name[16];
@@ -219,14 +196,9 @@ struct Material // 44 byte
 
 Header head;
 struct {
-    //float unk;
-    //float unk2;
-    //byte   SpokeCount<bgcolor=cRed>;    
-    //byte    Na[3];
+
     Child Chld  <bgcolor=cRed>;
-    //struct Some1 Somes[Chld.Some1Count];
     struct GeometryInfo Geometry;
-    //struct ObjectName ObjectNames[Geometry.NumObjects];
     struct Vertex Vert[Geometry.NumVertex];
     struct Faces  Face[Geometry.NumFaces];
     int    countPage;
@@ -234,16 +206,12 @@ struct {
     
     int TextureDescriptionsCount <bgcolor=cYellow>;
     struct CutOut TextureDescriptionss[TextureDescriptionsCount];
-
-    //short MaterialColoursCount <bgcolor=cYellow>;
-    //short u;
-    //struct MaterialColours Materials0[MaterialColoursCount];
-    
+   
     short MaterialCount <bgcolor=cYellow>;
     short u2;
     struct Material Materials[MaterialCount];
 
-// need test
+
     if (Geometry.CountNotice > 0) {
         struct {
             char Text[8];

@@ -1,0 +1,136 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: MPR Live For Speed
+//   Authors: Draggo & Ganjaman
+//   Version: 1
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+typedef signed short word;
+typedef unsigned int time;
+//struct FILE{
+struct PSKINS{
+    char skin_name[24]<bgcolor=0xBDC703>;
+    char helmet_name[24]<bgcolor=0xBDC703>;
+};
+struct PLAYER{
+    byte indx;
+    byte indx;
+    byte nl[2];
+    char name[24]<bgcolor=0xBDC703>;// including colours
+    char number_plate[8]<bgcolor=0xBDC703>;
+    byte unk5[4];
+    byte unk6[4];
+    int unk10[2];
+    char helmet_skin_name[16]<bgcolor=0xBDC703>;
+    int unk7[3];
+    char car_name[32]<bgcolor=0xBDC703>;
+    char car_skin_name[8]<bgcolor=0xBDC703>;
+    int car_colours[10];
+    int car_setup[30];
+    byte unk8[4];
+    int unk9[17];
+
+};
+struct PLIST {
+    byte in1;
+    byte in2;
+    byte un1;
+    byte admin;
+    char name[32]<bgcolor=0xBDC703>;
+    char lfsw[24]<bgcolor=0xBDC703>;
+
+
+};
+
+struct CHUNK{
+    ubyte type;
+    ubyte index;
+    ubyte size<format=hex, bgcolor=0x67D8D8>;
+    if(size == 0xFE){
+        byte nll;
+        int data[80/4];
+    }else if(size == 0xFC ){
+        byte nll;
+        int amount;
+        int data[amount/4]<format=hex>;
+    }else if (size == 0xFD){
+        byte nll;
+        int amount;
+        byte params[4];
+        char message[amount-4];
+    }else if(size == 0xFB){
+        byte nll;
+    }else if(size == 0xFF){
+        byte nll;
+    }
+
+};
+
+
+    struct HEADER {
+        char head[6] <bgcolor=0x67D8D8>; //do not read file if no match
+        byte game_version; //ignore
+        byte Game_revision <bgcolor=0x9F9FFE ,format=hex>; //ignore
+        byte MPRversion <bgcolor=0x9FAFFF ,format=hex>; //ignore
+    } header;
+byte immediate_start; //joined already running game
+byte reserved1; // -
+byte reserved2; // -
+int  rules; // -
+int  flags; // -
+byte laps; //laps / hours
+byte skill; //skill level (0,1,2,3,4)
+byte wind; //0=off 1=weak 2=strong
+byte num_players; //players at start of race
+char LFS_version[8]<bgcolor=0xBDC703>; //text, ends 0
+char short_track_name[4]<bgcolor=0xBDC703>; // e.g. BL2R
+time start_time; //seconds from 00:00 1/1/1970
+char track_name[32]<bgcolor=0xBDC703>;// text, ends 0
+byte config;// 1,2,3... (first config is 1)
+byte reversed;// 0=no 1=yes
+byte weather; // 0,1,2... (first weather is 0)
+byte num_finished; //players in results table
+int race_time;
+struct RESULT_INFO {
+    char player_name[24]<bgcolor=0xBDC703>; // text, ends 0, no colours
+    char number_plate[8]<bgcolor=0xBDC703>;
+    char short_car_name[4]<bgcolor=0xBDC703>;
+    char lfsw_user_name[24]<bgcolor=0xBDC703>;
+    word laps_done; //total laps completed
+    word player_flags;// driver settings
+    byte confirm_flags;
+    byte number_of_stops;
+    word penalty_seconds;
+    time overall_time; //ms
+    time best_lap_time; //ms
+    byte null2;
+    byte start_position;
+    byte handicap_mass;
+    byte intake_restriction;
+} result_info[ num_finished ];
+if (track_name == "Blackwood")
+{
+    int nul[1260];
+}
+else if (track_name == "Rockingham")
+{
+    //int nul[1280];
+    byte n[21444];
+}
+else
+{
+    int nul[1260];
+}
+//PSKINS players_skins[num_finished]<optimize=false>;
+//PLAYER players[num_players]<optimize=false>;// if num ofstops
+//PLIST players[num_players+1]<optimize=false>;
+//    byte ind[4];
+//    int un3[32];
+//    byte ind2[4];
+//    int un4[21];
+CHUNK chunk[FileSize()]<optimize=false>;

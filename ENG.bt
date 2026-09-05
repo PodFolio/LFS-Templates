@@ -1,0 +1,274 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: ENG Live For Speed Engine
+//   Authors: Draggo & Ganjaman
+//   Version: 8
+//   Purpose: 
+//  Category: 
+// File Mask: *.eng
+//  ID Bytes: LFSENG
+//   History: 
+//------------------------------------------------
+
+local int FileFlag = 0;
+local byte version = 0;
+
+struct HEADER {
+    char head[6] <bgcolor=0x67D8D8>;
+    byte empty;
+    byte version <bgcolor=0x9F9FFE ,format=hex>;
+    
+} header;
+
+enum <byte> ENGTYPE{
+    inline = 0x0,
+    Flat = 0x1,
+    V = 0x2
+};
+
+string pots (float &i) {
+    string pot;
+    SPrintf(pot, "%0.14f",((float)i));
+    return pot;
+}
+string sto (float &i) {
+    string hun;
+    SPrintf(hun, "%0.2f",((float)i /1000));
+    return hun;
+}
+string red (float &i) {
+    string line;
+    SPrintf(line, "%0.2f",((float)i *9.5493f));
+    return line;
+}
+
+string bin (int &i){
+    string bina = IntToBinaryStr(i);
+    return bina;
+}
+
+struct WAVE{
+    byte amt;
+    local int i = amt;
+    byte unk;
+    byte v;
+    byte l;
+
+    if(v < 3){
+        if(v == 0){
+
+            if(amt != 0){
+                do{
+                    float x[4];
+                    i = i - 1;
+                }while(i != 0);
+            }
+        }else if((v < 2) && (amt != 0)){
+            i = amt;
+            do{
+                float x[2];
+                i=i-1;
+            }while(i != 0);
+        }
+    }else{
+        uint fileSize <comment= "Samples in wav", bgcolor=0x225F2A>;
+        float file[fileSize] <comment="Samples of wav", bgcolor=0xff5555>;
+    }
+    
+};
+
+struct EV {
+    float eRedline<comment = red ,bgcolor=0xBDC703>;
+    float eMaxPower<comment = sto ,bgcolor=0xBDC703>;
+    float eMaxTorque<comment = "Max Torque" ,bgcolor=0xBDC703>;
+};
+
+struct ICE{
+    float engineSize <comment = "Engine size" ,bgcolor=0xBDC703>;
+    byte Cylinders <comment = "Cylinders 1 - 12" ,bgcolor=0xBDC703>;
+    ENGTYPE EngineLayout;
+    short sp <hidden=true>;
+
+    float maxTurboBoost <comment = "Turbo Max Boost" ,bgcolor=0xBDC703>;
+
+    if(12 < version){
+        float turbomultipler <comment = "Turbo MOI Multipler" ,bgcolor=0xBDC703>;
+    }
+
+    float maxtorquemul <comment = "Max Torque Mul" ,bgcolor=0xBDC703>;
+    t = FileFlag & 4;
+    if(version < 14){
+        if(t > 0){
+            float torquesmul <comment = "Torque Spread Mul" ,bgcolor=0xBDC703>;
+        }
+    }
+    else
+    {
+        float torquesmul <comment = "Torque Spread Mul" ,bgcolor=0xBDC703>;
+        float flo0 <comment = "Something float" ,bgcolor=0xBDC703>;
+    }
+
+    float redline <comment = "Redline?" ,bgcolor=0xBDC703>;
+    float camtime <comment = "Cam Timing" ,bgcolor=0xBDC703>;
+
+    if(version < 2){
+        int nonknown;
+    }
+
+    if(version < 0x10){
+    }else{
+        float ResistanceMul <comment = pots ,bgcolor=0xBDC703>;
+        float InteriaMul <comment = pots ,bgcolor=0xBDC703>;
+        float idle<comment = "Idle Speed?" ,bgcolor=0xBDC703>;
+    }
+};
+
+struct SampleRegion{
+    if(version<2){
+        float unk;
+    }
+    local byte smpAmt = 8;
+
+    if(version < 8){
+        smpAmt = 7;
+    }
+    if(version < 7){
+        smpAmt = 6;
+    }
+    if(version < 6){
+        smpAmt = 4;
+    }
+
+    WAVE EngineWaveSample;
+
+    WAVE TurboSample;
+
+    WAVE WindSkidSample;
+
+    WAVE GearWhineSample;
+
+    if(smpAmt > 4){
+
+        WAVE AirIntakeSample;
+    
+        WAVE DumpValveSample;
+
+        if(smpAmt > 6){
+
+            WAVE GearShiftSample;
+
+            if(smpAmt > 7){
+
+                WAVE StarterSample;
+            }
+        }
+    }
+    
+    float tone <comment = "Exhaust pipe tone" ,bgcolor=0xBDC703>;
+
+    if(0xb < version){
+
+        float tone2 <comment = "Tone variation" ,bgcolor=0xBDC703>;
+
+    }
+
+    float silence <comment = "Silencers" ,bgcolor=0xBDC703>;
+    float unev <comment = "Unevenness" ,bgcolor=0xBDC703>;
+    float exh <comment = "Exhaust pulse tone" ,bgcolor=0xBDC703>;
+    float offp <comment = "Off power tone" ,bgcolor=0xBDC703>;
+    float offp2 <comment = "Off power volume" ,bgcolor=0xBDC703>;
+    
+    if(8 < version){
+        float idle <comment = "Idle volume boost" ,bgcolor=0xBDC703>;
+    }
+    if(version < 6){
+        float ttfl;
+    }
+
+    if(4 < version){
+        float tubo <comment = "Turbo recorded" ,bgcolor=0xBDC703>;
+    }
+    
+    float tubo2 <comment = "Turbo volume" ,bgcolor=0xBDC703>;
+    float tubo3 <comment = "Turbo muffler" ,bgcolor=0xBDC703>;
+
+    if(5 < version){
+        float dump <comment = "Dump valve volume" ,bgcolor=0xBDC703>;
+        float dump2 <comment = "Dump valve muffler" ,bgcolor=0xBDC703>;
+    }
+
+    if(4 < version){
+        if(version < 8){
+            float floU[3];
+        }
+        float gear <comment = "Gear whine recorded" ,bgcolor=0xBDC703>;
+    }
+    
+    if(2 < version){
+        float gear2 <comment = "Gear whine volume" ,bgcolor=0xBDC703>;
+        float gear3 <comment = "Gear whine muffler" ,bgcolor=0xBDC703>;
+        float air <comment = "Air intake volume" ,bgcolor=0xBDC703>;
+    }
+    if(5 < version){
+        float air2 <comment = "Air intake muffler" ,bgcolor=0xBDC703>;    
+    }
+
+    if(6 < version){
+        float gshift <comment = "Gear shift volume" ,bgcolor=0xBDC703>;
+        float gshift2 <comment = "Gear shift muffler" ,bgcolor=0xBDC703>;
+    }
+    if(7< version){
+        float start <comment = "Starter volume" ,bgcolor=0xBDC703>;
+        float start2 <comment = "Starter muffler" ,bgcolor=0xBDC703>;
+    }
+    if(version < 10){
+        float flo2;
+    }
+    
+    float ex <comment = "Exhaust volume" ,bgcolor=0xBDC703>;
+    
+    if(8  < version){
+        float coc <comment = "Cockpit muffing" ,bgcolor=0xBDC703>;
+    }
+    if(5 < version){
+        float wind <comment = "Wind volume" ,bgcolor=0xBDC703>;
+        float skid <comment = "Skid volume" ,bgcolor=0xBDC703>;
+    }
+    if(10 < version){
+        float hea <comment = "Header MIX" ,bgcolor=0xBDC703>;
+        float col <comment = "Colector MIX" ,bgcolor=0xBDC703>;
+        float tail <comment = "Tail MIX" ,bgcolor=0xBDC703>;
+        if(version < 11){
+            byte idk[4];
+        }
+    }
+};
+
+struct FILE{
+    int TSTB <comment =bin, bgcolor=0xBDC703>;
+
+    FileFlag = TSTB;
+    local int t = FileFlag & 8;
+
+    if(t > 0){
+        byte checkByte;
+        version = checkByte;
+        if(0x10 < version){return 1;} //could not read engine
+        byte flag0;
+        byte flag1;
+        byte flagEV;
+
+    }
+
+    if (flagEV != 0)
+    {
+        EV ev;
+    }
+    else
+    {
+        ICE engine;
+    }
+    
+    SampleRegion samples;
+} file;

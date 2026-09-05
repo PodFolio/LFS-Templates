@@ -1,3 +1,15 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: Live For Speed New Blackwood Objects part cut from wld
+//   Authors: Draggo (Based on turbosnail SRE template)
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
 typedef unsigned char byte;
 typedef signed short word;
 typedef unsigned short u_word;
@@ -68,7 +80,7 @@ struct LODInfo {
 struct GeometryInfo{
     ushort    NumVertex;      //2
     ushort    NumFaces;       //2
-    //uint    SubObjectsCount;    //number of child meshes
+
     byte SubObjectsCount;
     byte uk1;
     byte uk2;
@@ -128,19 +140,6 @@ struct Texture // 20 byte
     char Name[20]<comment = "filename in /data/dds texture name">;
 };
 
-//struct TextureDescriptions // 24 byte
-//{
-//    char    Name[16]; //16
- //   byte    skyReflection<comment = "bit 0 : sky reflection">;
- //   byte    Rotate<comment = "bit 1: +90 bit 2: +90 bit 3: 90 bit 4: flip">;
- //   byte    TextureId<comment = "world texture index">;
- //   byte    Sp1<comment = "00 - not transparent, 01 - Fully transparent, 02 - Glass, 03 - light, 04 - dark ">;             // 64 = 1.0
- //   byte    UTile;          // 64 = 1.0
- //   byte    VTile;          // 64 = 1.0
-  //  byte    Uoffset;           // 64 = 1.0
- //   byte    Voffset;           // 64 = 1.0
-
-//};
 
 struct CutOut
 {
@@ -193,12 +192,6 @@ struct Map
     
 };
 
-
-//local u_word Ind1_ = 0;
-//local u_word Ind2_ = 0;
-//local u_word Ind3_ = 0;
-//local int i = 1; 
-//local int j = 1;
 
 struct Head
 {
@@ -289,15 +282,6 @@ struct{
         
             byte ZERO[128];
         }  
-
-
-    //if(Chld.Type == 0) {
-     //       struct {
-      //      char name[8];
-      //      } layouts[16];
-        
-      //      byte ZERO[128];
-      //  }
 
 
     } SubObject [Main.Geometry.SubObjectsCount] <optimize=false>;

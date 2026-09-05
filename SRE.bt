@@ -1,8 +1,8 @@
 //------------------------------------------------
 //--- 010 Editor v7.0.2 Binary Template
 //
-//      File: Live For Speed VOB
-//   Authors: turbosnail
+//      File: SRE Live For Speed
+//   Authors: turbosnail with some small changes by Draggo
 //   Version: 
 //   Purpose: 
 //  Category: 
@@ -10,7 +10,6 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-//local int newFile = FileNew();
 typedef unsigned char byte;
 typedef signed short word;
 typedef unsigned short u_word;
@@ -107,7 +106,6 @@ struct LODInfo {
 struct GeometryInfo{
     ushort    NumVertex;      //2
     ushort    NumFaces;       //2
-    //uint    SubObjectsCount;    //number of child meshes
     byte SubObjectsCount;
     byte uk;
     byte colors;
