@@ -10,35 +10,70 @@
 //  ID Bytes: 
 //   History: 
 //------------------------------------------------
-typedef unsigned char byte;
-typedef signed short word;
-typedef unsigned short u_word;
-typedef unsigned int u_int;
-
+string angle (float &i) {
+    string ang;
+    SPrintf(ang, "%0.2f",((float)i *57.29577));
+    return ang;
+}
+string radius (float &i) {
+    string ra;
+    SPrintf(ra, "%0.3f",(((float)i/100)/2));
+    return ra;
+}
 struct Header
 {
     char    FileType[7];   
     byte    Na;            
 };
 
+enum <byte> DRAW{
+    none = 0,
+    wheels = 1,
+    body = 2
+};
+enum <byte> CLOCKS{
+    off = 0,
+    real = 1,
+    virtual = 2,
+    all = 3
+};
+enum <byte> MIRROR{
+    off_ = 0,
+    real_ = 1,
+    virtual_ = 2
+};
+enum <byte> LOOK{
+    joystick_ = 0,
+    axis = 1,
+    steer = 2,
+    mouseX = 3,
+    mouseXY = 4
+};
 
 Header head;
-byte some1;
+DRAW type;
 byte some2;
 byte some3;
 byte some4;
-byte some5;
+CLOCKS mode;
 byte some6;
-byte some7;
-byte some8;
-float som1;
-float som2;
+MIRROR mode_;
+byte AccelShiftsVievpoint;
+LOOK function;
+byte som[3];
+float fov;
 float som3;
 float som4;
-float unk[10];
 float Xoffset;
 float Yoffset;
 float Zoffset;
+float PitchView<comment=angle>;
+float RotateView<comment=angle>;
+float unk[8];
 float som7;
 float som8;
-float unk2[5];
+float LateralMirrorOffset;
+float VerticalMirrorOffset;
+float unk2;
+float unk2;
+float unk2;
