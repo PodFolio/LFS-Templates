@@ -20,6 +20,16 @@ string radius (float &i) {
     SPrintf(ra, "%0.3f",(((float)i/100)/2));
     return ra;
 }
+string ten (short &i) {
+    string hun;
+    SPrintf(hun, "%0.1f",((float)i /-10));
+    return hun;
+}
+string ten2 (short &i) {
+    string hun2;
+    SPrintf(hun2, "%0.1f",((float)i /10));
+    return hun2;
+}
 struct Header
 {
     char    FileType[7];   
@@ -49,6 +59,15 @@ enum <byte> LOOK{
     mouseX = 3,
     mouseXY = 4
 };
+enum <byte> DRIVER{
+    driverONwheelON = 0,
+    driverOFFwheelON = 1,
+    driverOFFwheelOFF = 2
+};
+enum <byte> ACCELERATION{
+    no = 0,
+    yes = 1
+};
 
 Header head;
 DRAW type;
@@ -56,24 +75,38 @@ byte some2;
 byte some3;
 byte some4;
 CLOCKS mode;
-byte some6;
+DRIVER draw;
 MIRROR mode_;
-byte AccelShiftsVievpoint;
+ACCELERATION shiftsVievpoint;
 LOOK function;
 byte som[3];
 float fov;
 float som3;
 float som4;
-float Xoffset;
-float Yoffset;
-float Zoffset;
-float PitchView<comment=angle>;
-float RotateView<comment=angle>;
-float unk[8];
-float som7;
-float som8;
-float LateralMirrorOffset;
-float VerticalMirrorOffset;
-float unk2;
-float unk2;
-float unk2;
+float cXoffset;
+float cYoffset;
+float cZoffset;
+float cPitchView<comment=angle>;
+float cRotateView<comment=angle>;
+float cLateralMirrorOffset;
+float cVerticalMirrorOffset;
+short cCentreMirrorX<comment=ten>;
+short cCentreMirrorY<comment=ten2>;
+short cRightMirrorX<comment=ten>;
+short cRightMirrorY<comment=ten2>;
+short cLeftMirrorX<comment=ten>;
+short cLeftMirrorY<comment=ten2>;
+float iXoffset;
+float iYoffset;
+float iZoffset;
+float iPitchView<comment=angle>;
+float iRotateView<comment=angle>;
+float iLateralMirrorOffset;
+float iVerticalMirrorOffset;
+short iCentreMirrorX<comment=ten>;
+short iCentreMirrorY<comment=ten2>;
+short iRightMirrorX<comment=ten>;
+short iRightMirrorY<comment=ten2>;
+short iLeftMirrorX<comment=ten>;
+short iLeftMirrorY<comment=ten2>;
+
