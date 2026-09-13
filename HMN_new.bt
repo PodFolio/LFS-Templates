@@ -199,33 +199,75 @@ struct Map
     
 };
 
-struct Headr // 32 bytes
+struct Headr
 {
         byte unkn2 <bgcolor=0x9FAFFF ,format=hex>;
         byte empty2[3];
         int empty3;
         float size;
 };
-struct Ani // 44 byte
-{
-    int unk1 <bgcolor=0x9FAFFF ,format=hex>;
-    float unk2;
-    int unk3;
-};
-struct Some
+
+struct Bone
 {
     int unk1;
-    float unk2;
-    float unk3;
-    float unk4;
+    int unk2;
+    int unk3;
+    int unk4;
     int unk5;
     int unk6;
     int unk7;
-    float unk8;
-    float unk9;
-    float unk10;
+    int unk8;
+    int unk9;
+    int unk10;
     int unk11;
+    int unk12;
 
+
+};
+struct Bone2
+{
+    int unk1;
+    int unk2;
+    int unk3;
+    int unk4;
+    int unk5;
+    int unk6;
+
+};
+struct Frames
+{
+    Bone head;
+    Bone throat;
+    Bone rightHand;
+    Bone leftHand;
+    Bone rightShoulder;
+    Bone leftShoulder;
+    Bone rightFoot;
+    Bone leftFoot;
+    Bone rightHeel;
+    Bone leftHeel;
+    Bone rightLeg;
+    Bone leftLeg;
+    Bone rightHip;
+    Bone leftHip;
+    Bone butt;
+    Bone belly;
+    Bone tits;
+    Bone neck;
+    Bone rightArm;
+    Bone leftArm;
+    Bone rightForearm;
+    Bone leftForearm;
+    Bone bellyBottom;
+    Bone rightHandFingers;
+    Bone leftHandFingers;
+    Bone rightHandPhalanges;
+    Bone leftHandPhalanges;
+    Bone rightHandThumb;
+    Bone leftHandThumb;
+    Bone rightHandThumbPhalanger;
+    Bone leftHandThumbPhalanger;
+    Bone2 what;
 };
 
 Header head;
@@ -259,6 +301,41 @@ Headr he;
             byte ZERO[128];
         }
 }  Suit[14] <optimize=false>;
-
-Ani Someshit;
-Some So2[Someshit.unk3];
+int unk1[860];
+char posename[16];
+Frames pose;
+char posename2[16];
+Frames pose2[2];
+char posename3[16];
+Frames pose3[2];
+char posename4[16];
+Frames pose4[2];
+char posename5[16];
+Frames pose5[2];
+char posename6[16];
+Frames pose6;
+char posename7[16];
+Frames pose7;
+char posename8[16];
+Frames pose8;
+char posename9[16];
+Frames pose9;
+char posename10[16];
+Frames pose10;
+char posename11[16];
+Frames pose11;
+char posename12[16];
+Frames pose12;
+char posename13[16];
+Frames pose13;
+char posename14[16];
+Frames pose14;
+char posename15[16];
+Frames pose15;
+int unk2[857];
+char posename16[16];
+Frames pose16;
+char posename17[16];
+Frames pose17;
+char posename18[16];
+Frames pose18;
