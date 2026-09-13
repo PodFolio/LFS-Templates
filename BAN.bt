@@ -11,61 +11,93 @@
 //   History: 
 //------------------------------------------------
 
-struct Header // 32 bytes
+struct Header
 {
     char head[6] <bgcolor=0x67D8D8>;
     byte empty;
     byte version <bgcolor=0x9F9FFE ,format=hex>;
-    byte revision <bgcolor=0x9FAFFF ,format=hex>;
-    byte empty1;
-    byte flag;
-    byte empty3;
 
 };
 
-
-struct Ani // 44 byte
-{
-    byte unk1 <bgcolor=0x9FAFFF ,format=hex>;
-    byte unk1_2;
-    byte unk1_3;
-    byte unk1_4;    
-    float unk2;
-    int unk3;
-};
-struct Some
+struct Bone
 {
     int unk1;
-    float unk2;
-    float unk3;
-    float unk4;
+    int unk2;
+    int unk3;
+    int unk4;
     int unk5;
     int unk6;
     int unk7;
-    float unk8;
-    float unk9;
-    float unk10;
+    int unk8;
+    int unk9;
+    int unk10;
     int unk11;
+    int unk12;
+
+};
+struct Bone2{
+    int unk1;
+    int unk2;
+    int unk3;
+    int unk4;
+    int unk5;
+    int unk6;
+    int unk7;
+    int unk8;
+    int unk9;
+    int unk10;
+    int unk11;
+    int unk12;
+
+};
+struct Frames
+{
+    Bone head;
+    Bone throat;
+    Bone rightHand;
+    Bone leftHand;
+    Bone rightShoulder;
+    Bone leftShoulder;
+    Bone rightFoot;
+    Bone leftFoot;
+    Bone rightHeel;
+    Bone leftHeel;
+    Bone rightLeg;
+    Bone leftLeg;
+    Bone rightHip;
+    Bone leftHip;
+    Bone butt;
+    Bone belly;
+    Bone tits;
+    Bone neck;
+    Bone rightArm;
+    Bone leftArm;
+    Bone rightForearm;
+    Bone leftForearm;
+    Bone bellyBottom;
+    Bone rightHandFingers;
+    Bone leftHandFingers;
+    Bone rightHandPhalanges;
+    Bone leftHandPhalanges;
+    Bone rightHandThumb;
+    Bone leftHandThumb;
+    Bone rightHandThumbPhalanger;
+    Bone leftHandThumbPhalanger;
 
 };
 
 
-Header head;
+Header headr;
 
-byte nk2;
-byte nk3;
-byte nk4;
+byte unk;
+byte unk;
+byte unk;
+byte unk;
+float nk3;
+byte FrameCount;
+byte nk;
+byte BonesCount;
+byte nk;
 int zero;
-byte nk5;
-byte nk6;
-byte nk7;
-byte nk8;
-byte nk8;
-byte nk8;
-byte nk8;
-byte nk8;
-byte nk8;
-
-float nk1;
-Ani Someshit;
-Some So2[Someshit.unk3];
+Frames frame[FrameCount];
+int wth;
