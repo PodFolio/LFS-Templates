@@ -2,8 +2,8 @@
 //--- 010 Editor v7.0.2 Binary Template
 //
 //      File: VEH Live For Speed
-//   Authors: Ganjaman & Draggo & turbosnail (SRE part)  
-//   Version: 3
+//   Authors: Ganjaman & Draggo & turbosnail (SRE part) & Cyk (finding various values)  
+//   Version: 4
 //   Purpose: 
 //  Category: 
 // File Mask: *.veh
@@ -652,16 +652,17 @@ struct VehHeader{
     byte unk1:1;
     byte hasRearPassengers:1;
     byte unk3:3;
-    byte someCheck:1;
+    byte GroovedSlicks:1;
     byte unk4:1;
 
     //some3_
-    byte unk2:2;
+    byte pitLimterRearFog:1;
+    byte unk2:1;
     byte shiftLight:1;
     byte SpecifyFuelTank:1;
-    byte unk11:1;
-    byte openDiffOnly:1;
-    byte SingelSettingDiff:1;
+    byte unk11:3;
+    //byte openDiffOnly:1;
+    //byte SingelSettingDiff:1;
     byte IncludeBattery:1;
 
     //required
@@ -675,10 +676,31 @@ struct VehHeader{
     byte SpareWheelDrawHub:1;
 };
 
-struct VehVersions{ //this gets stored in it's totality, so i assume it's critical
-    byte some;
-    byte some1;
-    byte some2;
+struct VehVersions{
+    byte brake_abs:1;
+    byte rear_brake_only:1;
+    byte LimitLockToBaseLock:1;
+    byte SpecifyAllowedTyreTypes:1;
+    byte SpecifyTyrePressureLimits:1;
+    byte spare:3;
+
+    byte horn:1;
+    byte sp1:2;
+    byte handbrake:1;
+    byte ovalSuspensionArm:1;
+    byte pitLimiterFlashingLight:1;
+    byte sp2:1;
+    byte starterMotor:1;
+
+    byte sp3:1;
+    byte engineDamageLight:1;
+    byte sp4:1;
+    byte sidelightsOffWithHeadlights:1;
+    byte sp5:1;
+    byte openDiffOnly:1;
+    byte SingleSettingDiff:1;
+    byte sp6:1;
+
     byte One <comment = "Always One">;
 };
 
@@ -730,28 +752,28 @@ struct EngFinal{
     }
 };
 
-struct ExtraInner{
-    int i;
-    int j;
-    int k;
-    int l;
+struct FramePoint{
+    int X;
+    int Y;
+    int Z;
+    int flags;
     short m;
-    byte n;
+    byte type;
     byte o;
 };
 
-struct ExtraFloat{
-    short i;
-    short j;
+struct FrameTube{
+    short point1;
+    short point2;
     float TUBEmass;
-    int l;
+    int flags;
 };
 
 struct Frame{
-    int i;
-    ExtraInner j[i];
-    int k;
-    ExtraFloat l[k];
+    int countPoints;
+    FramePoint points[countPoints];
+    int countTubes;
+    FrameTube tubes[countTubes];
 };
 
 union VehFlags{
@@ -847,10 +869,13 @@ struct CarData
     }
     
     if(4 < EditorExportVersion){
-        float skip[4];
+        float empty_mass;
+        float maxPowerKw;
+        float maxTorque;
+        float torqueRpm;
     }
     if(5 < EditorExportVersion){
-        float sometomg;
+        float fuelTankSize;
     }
     EngFinal eng;
 
@@ -870,7 +895,7 @@ struct CarData
     }
 
     if(EditorExportVersion >= 7){
-        int v;
+        int ObjectSwapFlags;
     }
 
     ObjectPos _engine;
@@ -904,13 +929,13 @@ struct CarData
     }
 
     if((EditorExportVersion < 6) && (ModifiedFlags & 0x80000) != 0){
-        float TrailReductionH;
+        float FuelMaxLiters;
     }
 
     float sssome4[3];
-    int mustSkip;
+    int TC_BackSeatFlags;
     
-    if((mustSkip != 0) && (EditorExportVersion < 6)){
+    if((TC_BackSeatFlags != 0) && (EditorExportVersion < 6)){
         byte ThisMustBeSkipped[8];
     }
 
