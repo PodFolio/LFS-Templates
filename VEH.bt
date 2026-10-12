@@ -343,7 +343,7 @@ struct Map
         byte G;
         byte B;
     } Color;
-    byte Sp;
+    byte EmitsLight<comment = "0 - no, 1 - yes; Not For Car Mods">;
     int  Flag; // bitwise 0-no, 1-central 16 - link to top
     // step 0.25 
     // heading = step
