@@ -171,7 +171,7 @@ struct Map
         byte G;
         byte B;
     } Color;
-    byte Sp;
+    byte EmitsLight<comment = "0 - no, 1 - yes">;
     int  Flag; // bitwise 0-no, 1-central 16 - link to top
     // step 0.25 
     // heading = step
@@ -218,7 +218,7 @@ struct Header // 32 bytes
     int   idk3;
     int    idk4;
     char tname[8];
-    int unkn[63227];
+    int unkn[63254];
 };
 
 Header toppart;
